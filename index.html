@@ -1,12 +1,50 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>The Soul</title>
-</head>
-<body>
-  <h1>The Soul</h1>
+<!doctype html>
+<html>
+  <script>
+    var Immolate = {
+      onRuntimeInitialized: function() {
+        var instance = new Immolate.Instance("IMMOLATE");
+        console.log(instance.random("erratic"));
+        instance.delete();
+      }
+    };
+  </script>
   <script src="immolate.js"></script>
-</body>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Sedan&display=swap');
+    
+    body, h1, p {
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Sedan", Arial, sans-serif;
+      line-height: 1.6;
+      color: #333;
+    }
+
+    h1 {
+      text-align: center;
+      padding: 2rem 0;
+      background-color: #f4f4f4;
+      color: #444;
+    }
+
+    p {
+      max-width: 600px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+      text-align: center;
+    }
+  </style>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Soul</title>
+  </head>
+  <body>
+    <h1>The Soul</h1>
+    <p>A seed analyzer for Balatro. Currently a heavy WIP.</p>
+  </body>
 </html>
