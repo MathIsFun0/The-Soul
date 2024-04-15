@@ -1,20 +1,21 @@
 #include <string>
 #include <vector>
+#include <cstdint>
 
-const unsigned long long MAX_UINT64 = 18446744073709551615ull;
+const uint64_t MAX_UINT64 = 18446744073709551615ull;
 
 typedef union DoubleLong {
     double dbl;
-    unsigned long long ulong;
+    uint64_t ulong;
 } dbllong;
 
 struct LuaRandom {
-    unsigned long long state[4];
+    uint64_t state[4];
     LuaRandom(double seed) {
         double d = seed;
-        unsigned long long r = 0x11090601;
+        uint64_t r = 0x11090601;
         for (int i = 0; i < 4; i++) {
-            unsigned long long m = 1ull << (r & 255);
+            uint64_t m = 1ull << (r & 255);
             r >>= 8;
             d = d * 3.14159265358979323846 + 2.7182818284590452354;
             dbllong u;
@@ -29,9 +30,9 @@ struct LuaRandom {
     LuaRandom() {
         LuaRandom(0);
     }
-    unsigned long long _randint() {
-        unsigned long long z = 0;
-        unsigned long long r = 0;
+    uint64_t _randint() {
+        uint64_t z = 0;
+        uint64_t r = 0;
         z = state[0];
         z = (((z<<31ull)^z)>>45ull)^((z&(MAX_UINT64<<1ull))<<18ull);
         r ^= z;
@@ -50,7 +51,7 @@ struct LuaRandom {
         state[3] = z;
         return r;
     }
-    unsigned long long randdblmem() {        
+    uint64_t randdblmem() {        
         return (_randint() & 4503599627370495ull) | 4607182418800017408ull;
     }
     double random() {

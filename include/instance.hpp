@@ -38,16 +38,13 @@ struct Instance {
         rng = LuaRandom(get_node(ID));
         return rng.random();
     }
+    int randint(std::string ID, int min, int max) {
+        rng = LuaRandom(get_node(ID));
+        return rng.randint(min, max);
+    }
+    std::string randchoice(std::string ID, std::vector<std::string> items) {
+        rng = LuaRandom(get_node(ID));
+        return items[rng.randint(0, items.size()-1)];
+    }
+    //Todo: randweightedchoice (need the struct for that first)
 };
-
-// Bindings for JS
-#ifdef __EMSCRIPTEN__
-#include <emscripten/bind.h>
-using namespace emscripten;
-EMSCRIPTEN_BINDINGS(Immolate) {
-    class_<Instance>("Instance")
-        .constructor<std::string>()
-        .function("get_node", &Instance::get_node)
-        .function("random", &Instance::random);
-}
-#endif

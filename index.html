@@ -8,6 +8,15 @@
         instance.delete();
       }
     };
+
+    // Helper function for vectors
+    function asVector(arr) {
+      var vectorInt = new Module.VectorStr();
+      for (var i = 0; i < arr.length; i++) {
+        vectorInt.push_back(arr[i]);
+      }
+      return vectorInt;
+    }
   </script>
   <script src="immolate.js"></script>
   <style>

@@ -2441,6 +2441,16 @@ function dbg(...args) {
     };
 
   
+  var __embind_register_constant = (name, type, value) => {
+      name = readLatin1String(name);
+      whenDependentTypesAreResolved([], [type], (type) => {
+        type = type[0];
+        Module[name] = type['fromWireType'](value);
+        return [];
+      });
+    };
+
+  
   var emval_freelist = [];
   
   var emval_handles = [];
@@ -2658,6 +2668,10 @@ function dbg(...args) {
       }, {
         ignoreDuplicateRegistrations: true,
       });
+    };
+
+  var __embind_register_optional = (rawOptionalType, rawType) => {
+      __embind_register_emval(rawOptionalType);
     };
 
   
@@ -3040,6 +3054,23 @@ function dbg(...args) {
 
   var __emscripten_memcpy_js = (dest, src, num) => HEAPU8.copyWithin(dest, src, src + num);
 
+
+  
+  
+  
+  var requireRegisteredType = (rawType, humanName) => {
+      var impl = registeredTypes[rawType];
+      if (undefined === impl) {
+        throwBindingError(`${humanName} has unknown type ${getTypeName(rawType)}`);
+      }
+      return impl;
+    };
+  var __emval_take_value = (type, arg) => {
+      type = requireRegisteredType(type, '_emval_take_value');
+      var v = type['readValueFromPointer'](arg);
+      return Emval.toHandle(v);
+    };
+
   var _abort = () => {
       abort('native code called abort()');
     };
@@ -3189,6 +3220,8 @@ var wasmImports = {
   /** @export */
   _embind_register_class_function: __embind_register_class_function,
   /** @export */
+  _embind_register_constant: __embind_register_constant,
+  /** @export */
   _embind_register_emval: __embind_register_emval,
   /** @export */
   _embind_register_float: __embind_register_float,
@@ -3197,6 +3230,8 @@ var wasmImports = {
   /** @export */
   _embind_register_memory_view: __embind_register_memory_view,
   /** @export */
+  _embind_register_optional: __embind_register_optional,
+  /** @export */
   _embind_register_std_string: __embind_register_std_string,
   /** @export */
   _embind_register_std_wstring: __embind_register_std_wstring,
@@ -3204,6 +3239,10 @@ var wasmImports = {
   _embind_register_void: __embind_register_void,
   /** @export */
   _emscripten_memcpy_js: __emscripten_memcpy_js,
+  /** @export */
+  _emval_decref: __emval_decref,
+  /** @export */
+  _emval_take_value: __emval_take_value,
   /** @export */
   abort: _abort,
   /** @export */
@@ -3218,9 +3257,9 @@ var wasmImports = {
 var wasmExports = createWasm();
 var ___wasm_call_ctors = createExportWrapper('__wasm_call_ctors', 0);
 var ___getTypeName = createExportWrapper('__getTypeName', 1);
+var _malloc = createExportWrapper('malloc', 1);
 var _main = Module['_main'] = createExportWrapper('main', 2);
 var _fflush = createExportWrapper('fflush', 1);
-var _malloc = createExportWrapper('malloc', 1);
 var _free = createExportWrapper('free', 1);
 var _emscripten_stack_init = () => (_emscripten_stack_init = wasmExports['emscripten_stack_init'])();
 var _emscripten_stack_get_free = () => (_emscripten_stack_get_free = wasmExports['emscripten_stack_get_free'])();
@@ -3405,7 +3444,6 @@ var missingLibrarySymbols = [
   'demangle',
   'stackTrace',
   'getFunctionArgsName',
-  'requireRegisteredType',
   'createJsInvokerSignature',
   'registerInheritedInstance',
   'unregisterInheritedInstance',
@@ -3543,6 +3581,7 @@ var unexportedSymbols = [
   'getTypeName',
   'getFunctionName',
   'heap32VectorToArray',
+  'requireRegisteredType',
   'usesDestructorStack',
   'createJsInvoker',
   'UnboundTypeError',
