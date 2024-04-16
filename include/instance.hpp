@@ -1,21 +1,31 @@
 #include <map>
 #include <string>
+#pragma once
 
 struct Cache {
     std::map<std::string, double> nodes;
     bool generatedFirstPack;
 };
 
-// Todo: Add Item enum and incorporate it. Using ints for now
 struct InstParams {
-    int deck;
-    int stake;
+    std::string deck;
+    std::string stake;
     bool showman;
-    std::map<int, bool> vouchers;
+    std::vector<std::string> vouchers;
+    InstParams() {
+        deck = "Red Deck";
+        stake = "White Stake";
+        showman = false;
+    }
+    InstParams(std::string d, std::string s, bool show) {
+        deck = d;
+        stake = s;
+        showman = show;
+    }
 };
 
 struct Instance {
-    std::map<int, bool> locked;
+    std::vector<std::string> locked;
     std::string seed;
     double hashedSeed;
     Cache cache;
@@ -24,7 +34,7 @@ struct Instance {
     Instance(std::string s) {
         seed = s;
         hashedSeed = pseudohash(s);
-        //todo: initialize params
+        params = InstParams();
         rng = LuaRandom(0);
     };
     double get_node(std::string ID) {
@@ -46,5 +56,23 @@ struct Instance {
         rng = LuaRandom(get_node(ID));
         return items[rng.randint(0, items.size()-1)];
     }
-    //Todo: randweightedchoice (need the struct for that first)
+    std::string randweightedchoice(std::string ID, std::vector<WeightedItem> items) {
+        rng = LuaRandom(get_node(ID));
+        double poll = rng.random()*items[0].weight;
+        int idx = 1;
+        double weight = 0;
+        while (weight < poll) {
+            weight += items[idx].weight;
+            idx++;
+        }
+        return items[idx-1].item;
+    }
+
+    // Functions defined in functions.hpp
+    void lock(std::string item);
+    void unlock(std::string item);
+    bool isLocked(std::string item);
+    Card nextStandardCard(int ante);
+    bool isVoucherActive(std::string voucher);
+    void activateVoucher(std::string voucher);
 };

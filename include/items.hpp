@@ -1,6 +1,116 @@
 #include <string>
 #include <vector>
 
+// Structs for storing information
+struct ShopInstance {
+    double jokerRate;
+    double tarotRate;
+    double planetRate;
+    double playingCardRate;
+    double spectralRate;
+    ShopInstance() {
+        jokerRate = 20;
+        tarotRate = 4;
+        planetRate = 4;
+        playingCardRate = 0;
+        spectralRate = 0;
+    };
+    ShopInstance(double j, double t, double p, double c, double s) {
+        jokerRate = j;
+        tarotRate = t;
+        planetRate = p;
+        playingCardRate = c;
+        spectralRate = s;
+    }
+};
+
+struct JokerStickers {
+    bool eternal;
+    bool perishable;
+    bool rental;
+    JokerStickers() {
+        eternal = false;
+        perishable = false;
+        rental = false;
+    };
+    JokerStickers(bool e, bool p, bool r) {
+        eternal = e;
+        perishable = p;
+        rental = r;
+    }
+};
+
+struct JokerData {
+    std::string joker;
+    std::string rarity;
+    std::string edition;
+    JokerStickers stickers;
+    JokerData() {
+        joker = "Joker";
+        rarity = "Common";
+        edition = "No Edition";
+        stickers = JokerStickers();
+    };
+    JokerData(std::string j, std::string r, std::string e, JokerStickers s) {
+        joker = j;
+        rarity = r;
+        edition = e;
+        stickers = s;
+    };
+};
+
+struct ShopItem {
+    std::string type;
+    std::string item;
+    JokerData jokerData;
+    ShopItem() {
+        type = "Tarot";
+        item = "The Fool";
+    };
+    ShopItem(std::string t, std::string i) {
+        type = t;
+        item = i;
+    };
+    ShopItem(std::string t, std::string i, JokerData j) {
+        type = t;
+        item = i;
+        jokerData = j;
+    };
+};
+
+struct WeightedItem {
+    std::string item;
+    double weight;
+    WeightedItem(std::string i, double w) {
+        item = i;
+        weight = w;
+    };
+};
+
+struct Pack {
+    std::string type;
+    int size;
+    int choices;
+    Pack(std::string t, int s, int c) {
+        type = t;
+        size = s;
+        choices = c;
+    }
+};
+
+struct Card {
+    std::string base;
+    std::string enhancement;
+    std::string edition;
+    std::string seal;
+    Card(std::string b, std::string n, std::string e, std::string s) {
+        base = b;
+        enhancement = n;
+        edition = e;
+        seal = s;
+    }
+};
+
 std::vector<std::string> ENHANCEMENTS = {
     "Bonus",
     "Mult",
@@ -90,7 +200,24 @@ std::vector<std::string> RANKS = {
     "Ace"
 };
 
-//todo: packs (weighted items needed)
+std::vector<WeightedItem> PACKS = {
+    WeightedItem("RETRY", 22.42),
+    WeightedItem("Arcana Pack", 4),
+    WeightedItem("Jumbo Arcana Pack", 2),
+    WeightedItem("Mega Arcana Pack", 0.5),
+    WeightedItem("Celestial Pack", 4),
+    WeightedItem("Jumbo Celestial Pack", 2),
+    WeightedItem("Mega Celestial Pack", 0.5),
+    WeightedItem("Standard Pack", 4),
+    WeightedItem("Jumbo Standard Pack", 2),
+    WeightedItem("Mega Standard Pack", 0.5),
+    WeightedItem("Buffoon Pack", 1.2),
+    WeightedItem("Jumbo Buffoon Pack", 0.6),
+    WeightedItem("Mega Buffoon Pack", 0.15),
+    WeightedItem("Spectral Pack", 0.6),
+    WeightedItem("Jumbo Spectral Pack", 0.3),
+    WeightedItem("Mega Spectral Pack", 0.07)
+};
 
 std::vector<std::string> TAROTS = {
     "The Fool",
