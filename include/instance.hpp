@@ -72,6 +72,13 @@ struct Instance {
     void lock(std::string item);
     void unlock(std::string item);
     bool isLocked(std::string item);
+    std::string nextTarot(std::string source, int ante, bool soulable);
+    std::string nextPlanet(std::string source, int ante, bool soulable);
+    std::string nextSpectral(std::string source, int ante, bool soulable);
+    JokerData nextJoker(std::string source, int ante);
+    ShopInstance getShopInstance();
+    ShopItem nextShopItem(int ante);
+    std::string nextPack(int ante);
     Card nextStandardCard(int ante);
     bool isVoucherActive(std::string voucher);
     void activateVoucher(std::string voucher);

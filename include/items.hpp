@@ -22,6 +22,9 @@ struct ShopInstance {
         playingCardRate = c;
         spectralRate = s;
     }
+    double getTotalRate() {
+        return jokerRate + tarotRate + planetRate + playingCardRate + spectralRate;
+    }
 };
 
 struct JokerStickers {
