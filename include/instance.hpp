@@ -54,7 +54,15 @@ struct Instance {
     }
     std::string randchoice(std::string ID, std::vector<std::string> items) {
         rng = LuaRandom(get_node(ID));
-        return items[rng.randint(0, items.size()-1)];
+        std::string item = items[rng.randint(0, items.size()-1)];
+        if ((params.showman == false && isLocked(item)) || item == "RETRY") {
+            int resample = 2;
+            while (isLocked(item)) {
+                rng = LuaRandom(get_node(ID+"_resample"+std::to_string(resample)));
+                std::string item = items[rng.randint(0, items.size()-1)];
+                resample++;
+            }
+        }
     }
     std::string randweightedchoice(std::string ID, std::vector<WeightedItem> items) {
         rng = LuaRandom(get_node(ID));
@@ -72,14 +80,26 @@ struct Instance {
     void lock(std::string item);
     void unlock(std::string item);
     bool isLocked(std::string item);
+    void initLocks(int ante, bool freshProfile, bool freshRun);
+    void initUnlocks(int ante, bool freshProfile);
     std::string nextTarot(std::string source, int ante, bool soulable);
     std::string nextPlanet(std::string source, int ante, bool soulable);
     std::string nextSpectral(std::string source, int ante, bool soulable);
-    JokerData nextJoker(std::string source, int ante);
+    JokerData nextJoker(std::string source, int ante, bool hasStickers);
     ShopInstance getShopInstance();
     ShopItem nextShopItem(int ante);
     std::string nextPack(int ante);
+    std::vector<std::string> nextArcanaPack(int size, int ante);
+    std::vector<std::string> nextCelestialPack(int size, int ante);
+    std::vector<std::string> nextSpectralPack(int size, int ante);
+    std::vector<JokerData> nextBuffoonPack(int size, int ante);
+    std::vector<Card> nextStandardPack(int size, int ante);
     Card nextStandardCard(int ante);
     bool isVoucherActive(std::string voucher);
     void activateVoucher(std::string voucher);
+    std::string nextTag(int ante);
+    std::string nextBoss(int ante);
+
+    // To keep things a bit more organized, all the joker specific functions are in their own struct
+    struct ItemRNG;
 };

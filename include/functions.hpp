@@ -1,7 +1,6 @@
 #include <string>
 #include <algorithm>
 #include "instance.hpp"
-// Coded up to ImmolateCL line 380
 
 // Helper functions
 void Instance::lock(std::string item) {
@@ -15,9 +14,162 @@ bool Instance::isLocked(std::string item) {
     return std::find(locked.begin(), locked.end(), item) != locked.end();
 }
 
+// Lock initializers
+void Instance::initLocks(int ante, bool freshProfile, bool freshRun) {
+    if (ante < 2) {
+        lock("The Mouth");
+        lock("The Fish");
+        lock("The Wall");
+        lock("The House");
+        lock("The Mark");
+        lock("The Wheel");
+        lock("The Arm");
+        lock("The Water");
+        lock("The Needle");
+        lock("The Flint");
+        lock("Negative Tag");
+        lock("Standard Tag");
+        lock("Meteor Tag");
+        lock("Buffoon Tag");
+        lock("Handy Tag");
+        lock("Garbage Tag");
+        lock("Ethereal Tag");
+        lock("Top-up Tag");
+        lock("Orbital Tag");
+    }
+    if (ante < 3) {
+        lock("The Tooth");
+        lock("The Eye");
+    }
+    if (ante < 4) lock("The Plant");
+    if (ante < 5) lock("The Serpent");
+    if (ante < 6) lock("The Ox");
+    if (freshProfile) {
+        lock("Negative Tag");
+        lock("Foil Tag");
+        lock("Holographic Tag");
+        lock("Polychrome Tag");
+        lock("Golden Ticket");
+        lock("Mr. Bones");
+        lock("Acrobat");
+        lock("Sock and Buskin");
+        lock("Swashbuckler");
+        lock("Troubadour");
+        lock("Certificate");
+        lock("Smeared Joker");
+        lock("Throwback");
+        lock("Hanging Chad");
+        lock("Rough Gem");
+        lock("Bloodstone");
+        lock("Arrowhead");
+        lock("Onyx Agate");
+        lock("Glass Joker");
+        lock("Showman");
+        lock("Flower Pot");
+        lock("Blueprint");
+        lock("Wee Joker");
+        lock("Merry Andy");
+        lock("Oops! All 6s");
+        lock("The Idol");
+        lock("Seeing Double");
+        lock("Matador");
+        lock("Hit the Road");
+        lock("The Duo");
+        lock("The Trio");
+        lock("The Family");
+        lock("The Order");
+        lock("The Tribe");
+        lock("Stuntman");
+        lock("Invisible Joker");
+        lock("Brainstorm");
+        lock("Satellite");
+        lock("Shoot the Moon");
+        lock("Driver's License");
+        lock("Cartomancer");
+        lock("Astronomer");
+        lock("Burnt Joker");
+        lock("Bootstraps");
+        lock("Overstock Plus");
+        lock("Liquidation");
+        lock("Glow Up");
+        lock("Reroll Glut");
+        lock("Omen Globe");
+        lock("Observatory");
+        lock("Nacho Tong");
+        lock("Recyclomancy");
+        lock("Tarot Tycoon");
+        lock("Planet Tycoon");
+        lock("Money Tree");
+        lock("Antimatter");
+        lock("Illusion");
+        lock("Petroglyph");
+        lock("Retcon");
+        lock("Palette");
+    }
+    if (freshRun) {
+        lock("Planet X");
+        lock("Ceres");
+        lock("Eris");
+        lock("Five of a Kind");
+        lock("Flush House");
+        lock("Flush Five");
+        lock("Stone Joker");
+        lock("Steel Joker");
+        lock("Glass Joker");
+        lock("Golden Ticket");
+        lock("Lucky Cat");
+        lock("Cavendish");
+        lock("Overstock Plus");
+        lock("Liquidation");
+        lock("Glow Up");
+        lock("Reroll Glut");
+        lock("Omen Globe");
+        lock("Observatory");
+        lock("Nacho Tong");
+        lock("Recyclomancy");
+        lock("Tarot Tycoon");
+        lock("Planet Tycoon");
+        lock("Money Tree");
+        lock("Antimatter");
+        lock("Illusion");
+        lock("Petroglyph");
+        lock("Retcon");
+        lock("Palette");
+    }
+}
+void Instance::initUnlocks(int ante, bool freshProfile) {
+    if (ante == 2) {
+        unlock("The Mouth");
+        unlock("The Fish");
+        unlock("The Wall");
+        unlock("The House");
+        unlock("The Mark");
+        unlock("The Wheel");
+        unlock("The Arm");
+        unlock("The Water");
+        unlock("The Needle");
+        unlock("The Flint");
+        if (!freshProfile) unlock("Negative Tag");
+        unlock("Standard Tag");
+        unlock("Meteor Tag");
+        unlock("Buffoon Tag");
+        unlock("Handy Tag");
+        unlock("Garbage Tag");
+        unlock("Ethereal Tag");
+        unlock("Top-up Tag");
+        unlock("Orbital Tag");
+    }
+    if (ante == 3) {
+        unlock("The Tooth");
+        unlock("The Eye");
+    }
+    if (ante == 4) unlock("The Plant");
+    if (ante == 5) unlock("The Serpent");
+    if (ante == 6) unlock("The Ox");
+}
+
 // Card Generators
 std::string Instance::nextTarot(std::string source, int ante, bool soulable) {
-    // Todo: Account for Omen Globe
     std::string anteStr = std::to_string(ante);
     if (soulable && (params.showman || !isLocked("The Soul")) && random("soul_Tarot"+anteStr) > 0.997) {
         return "The Soul";
@@ -44,7 +196,7 @@ std::string Instance::nextSpectral(std::string source, int ante, bool soulable) 
     return randchoice("Spectral"+source+anteStr, SPECTRALS);
 }
 
-JokerData Instance::nextJoker(std::string source, int ante) {
+JokerData Instance::nextJoker(std::string source, int ante, bool hasStickers) {
     std::string anteStr = std::to_string(ante);
 
     // Get rarity
@@ -79,18 +231,20 @@ JokerData Instance::nextJoker(std::string source, int ante) {
 
     // Get next joker stickers
     JokerStickers stickers = JokerStickers();
-    if (params.stake == "Black Stake" || params.stake == "Blue Stake" || params.stake == "Purple Stake" || params.stake == "Orange Stake" || params.stake == "Gold Stake") {
-        if (joker != "Gros Michel" && joker != "Ice Cream" && joker != "Cavendish" && joker != "Luchador"
-         && joker != "Turtle Bean" && joker != "Diet Cola" && joker != "Popcorn"   && joker != "Ramen"
-         && joker != "Seltzer"     && joker != "Mr. Bones" && joker != "Invisible Joker") {
-            stickers.eternal = random("stake_shop_joker_eternal"+anteStr) > 0.7;
-         }
-    }
-    if (params.stake == "Orange Stake" || params.stake == "Gold Stake" && !stickers.eternal) {
-        stickers.perishable = random("ssjp"+anteStr) > 0.49;
-    }
-    if (params.stake == "Gold Stake") {
-        stickers.rental = random("ssjr"+anteStr) > 0.7;
+    if (hasStickers) {
+        if (params.stake == "Black Stake" || params.stake == "Blue Stake" || params.stake == "Purple Stake" || params.stake == "Orange Stake" || params.stake == "Gold Stake") {
+            if (joker != "Gros Michel" && joker != "Ice Cream" && joker != "Cavendish" && joker != "Luchador"
+            && joker != "Turtle Bean" && joker != "Diet Cola" && joker != "Popcorn"   && joker != "Ramen"
+            && joker != "Seltzer"     && joker != "Mr. Bones" && joker != "Invisible Joker") {
+                stickers.eternal = random("stake_shop_joker_eternal"+anteStr) > 0.7;
+            }
+        }
+        if (params.stake == "Orange Stake" || params.stake == "Gold Stake" && !stickers.eternal) {
+            stickers.perishable = random("ssjp"+anteStr) > 0.49;
+        }
+        if (params.stake == "Gold Stake") {
+            stickers.rental = random("ssjr"+anteStr) > 0.7;
+        }
     }
 
     return JokerData(joker, rarity, edition, stickers);
@@ -138,7 +292,7 @@ ShopItem Instance::nextShopItem(int ante) {
     else type = "Spectral";}}}
 
     if (type == "Joker") {
-        JokerData jkr = nextJoker("sho", ante);
+        JokerData jkr = nextJoker("sho", ante, true);
         return ShopItem(type, jkr.joker, jkr);
     } else if (type == "Tarot") {
         return ShopItem(type, nextTarot("sho", ante, false));
@@ -192,8 +346,51 @@ Card Instance::nextStandardCard(int ante) {
 
     return Card(base, enhancement, edition, seal);
 }
-
-// Vouchers
+std::vector<std::string> Instance::nextArcanaPack(int size, int ante) {
+    // Todo: Account for Omen Globe
+    std::vector<std::string> pack;
+    for (int i = 0; i < size; i++) {
+        pack.push_back(nextTarot("ar1", ante, true));
+        if (!params.showman) lock(pack[i]);
+    }
+    for (int i = 0; i < size; i++) unlock(pack[i]);
+    return pack;
+}
+std::vector<std::string> Instance::nextCelestialPack(int size, int ante) {
+    std::vector<std::string> pack;
+    for (int i = 0; i < size; i++) {
+        pack.push_back(nextPlanet("pl1", ante, true));
+        if (!params.showman) lock(pack[i]);
+    }
+    for (int i = 0; i < size; i++) unlock(pack[i]);
+    return pack;
+}
+std::vector<std::string> Instance::nextSpectralPack(int size, int ante) {
+    std::vector<std::string> pack;
+    for (int i = 0; i < size; i++) {
+        pack.push_back(nextSpectral("spe", ante, true));
+        if (!params.showman) lock(pack[i]);
+    }
+    for (int i = 0; i < size; i++) unlock(pack[i]);
+    return pack;
+}
+std::vector<Card> Instance::nextStandardPack(int size, int ante) {
+    std::vector<Card> pack;
+    for (int i = 0; i < size; i++) {
+        pack.push_back(nextStandardCard(ante));
+    }
+    return pack;
+}
+std::vector<JokerData> Instance::nextBuffoonPack(int size, int ante) {
+    std::vector<JokerData> pack;
+    for (int i = 0; i < size; i++) {
+        pack.push_back(nextJoker("buf", ante, true));
+        if (!params.showman) lock(pack[i].joker);
+    }
+    for (int i = 0; i < size; i++) unlock(pack[i].joker);
+    return pack;
+}
+// Misc
 bool Instance::isVoucherActive(std::string voucher) {
     return std::count(params.vouchers.begin(), params.vouchers.end(), voucher) > 0;
 }
@@ -207,3 +404,32 @@ void Instance::activateVoucher(std::string voucher) {
         };
     };
 };
+std::string Instance::nextTag(int ante) {
+    return randchoice("Tag"+std::to_string(ante), TAGS);
+}
+
+std::string Instance::nextBoss(int ante) {
+    std::vector<std::string> bossPool;
+    int numBosses = 0;
+    for (int i = 0; i < BOSSES.size(); i++) {
+        if (!isLocked(BOSSES[i])) {
+            if ((ante % 8 == 0 && BOSSES[i][0] != 'T') || (ante % 8 != 0 && BOSSES[i][0] == 'T')) {
+                bossPool.push_back(BOSSES[i]);
+                numBosses++;
+            }
+        }
+    }
+    if (numBosses == 0) {
+        for (int i = 0; i < BOSSES.size(); i++) {
+            if ((ante % 8 == 0 && BOSSES[i][0] != 'T') || (ante % 8 != 0 && BOSSES[i][0] == 'T')) {
+                unlock(BOSSES[i]);
+            }
+        }
+        return nextBoss(ante);
+    }
+    std::string chosenBoss = randchoice("boss", bossPool);
+    lock(chosenBoss);
+    return chosenBoss;
+}
+
+// Todo: Deck initialization and manipulation

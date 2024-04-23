@@ -27,6 +27,8 @@ EMSCRIPTEN_BINDINGS(Immolate) {
         .function("lock", &Instance::lock)
         .function("unlock", &Instance::unlock)
         .function("isLocked", &Instance::isLocked)
+        .function("initLocks", &Instance::initLocks)
+        .function("initUnlocks", &Instance::initUnlocks)
         .function("nextTarot", &Instance::nextTarot)
         .function("nextPlanet", &Instance::nextPlanet)
         .function("nextSpectral", &Instance::nextSpectral)
@@ -35,8 +37,17 @@ EMSCRIPTEN_BINDINGS(Immolate) {
         .function("nextShopItem", &Instance::nextShopItem)
         .function("nextPack", &Instance::nextPack)
         .function("nextStandardCard", &Instance::nextStandardCard)
+        .function("nextArcanaPack", &Instance::nextArcanaPack);
+        .function("nextCelestialPack", &Instance::nextCelestialPack);
+        .function("nextSpectralPack", &Instance::nextSpectralPack);
+        .function("nextBuffoonPack", &Instance::nextBuffoonPack);
+        .function("nextStandardPack", &Instance::nextStandardPack);
         .function("isVoucherActive", &Instance::isVoucherActive)
-        .function("activateVoucher", &Instance::activateVoucher);
+        .function("activateVoucher", &Instance::activateVoucher)
+        .function("nextTag", &Instance::nextTag)
+        .function("nextBoss", &Instance::nextBoss)
+        
+        .class_<Instance::ItemRNG>("ItemRNG");
 
     //items.hpp
     class_<ShopInstance>("ShopInstance")
