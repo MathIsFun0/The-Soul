@@ -236,6 +236,8 @@
       <div class="output-section">
         <h2>Output</h2>
         <textarea id="outputBox" rows="16" readonly></textarea>
+        <br>
+        <button id="downloadButton" style="font-size: 1em">Download</button>
       </div>
     </div>
   </body>
@@ -250,6 +252,7 @@
     const seedInput = document.getElementById('seed');
     const analyzeButton = document.getElementById('analyzeButton');
     const copyLinkButton = document.getElementById('copyButton');
+    const downloadButton = document.getElementById('downloadButton');
     const outputBox = document.getElementById('outputBox');
     
     // Add event listener for the "Copy Link" button
@@ -278,6 +281,21 @@
           console.error('Failed to copy link: ', err);
         });
     }
+
+    downloadButton.addEventListener('click', () => {
+      const filename = seedInput.value + "_analysis.txt";
+      const content = outputBox.value;
+
+      const blob = new Blob([content], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      a.click();
+
+      URL.revokeObjectURL(url);
+    });
 
     // Add event listener to the "Analysis" button
     analyzeButton.addEventListener('click', performAnalysis);
