@@ -9,6 +9,8 @@ using namespace emscripten;
 EMSCRIPTEN_BINDINGS(Immolate) {
     //instance.hpp
     register_vector<std::string>("VectorStr");
+    register_vector<JokerData>("VectorJkr");
+    register_vector<Card>("VectorCrd");
     class_<InstParams>("InstParams")
         .constructor<>()
         .constructor<std::string, std::string, bool>()
@@ -22,6 +24,8 @@ EMSCRIPTEN_BINDINGS(Immolate) {
         .function("random", &Instance::random)
         .function("randint", &Instance::randint)
         .function("randchoice", &Instance::randchoice)
+        .property("params", &Instance::params)
+        .property("seed", &Instance::seed)
 
         //functions.hpp
         .function("lock", &Instance::lock)
@@ -37,17 +41,19 @@ EMSCRIPTEN_BINDINGS(Immolate) {
         .function("nextShopItem", &Instance::nextShopItem)
         .function("nextPack", &Instance::nextPack)
         .function("nextStandardCard", &Instance::nextStandardCard)
-        .function("nextArcanaPack", &Instance::nextArcanaPack);
-        .function("nextCelestialPack", &Instance::nextCelestialPack);
-        .function("nextSpectralPack", &Instance::nextSpectralPack);
-        .function("nextBuffoonPack", &Instance::nextBuffoonPack);
-        .function("nextStandardPack", &Instance::nextStandardPack);
+        .function("nextArcanaPack", &Instance::nextArcanaPack)
+        .function("nextCelestialPack", &Instance::nextCelestialPack)
+        .function("nextSpectralPack", &Instance::nextSpectralPack)
+        .function("nextBuffoonPack", &Instance::nextBuffoonPack)
+        .function("nextStandardPack", &Instance::nextStandardPack)
         .function("isVoucherActive", &Instance::isVoucherActive)
         .function("activateVoucher", &Instance::activateVoucher)
+        .function("nextVoucher", &Instance::nextVoucher)
+        .function("setDeck", &Instance::setDeck)
+        .function("setStake", &Instance::setStake)
         .function("nextTag", &Instance::nextTag)
-        .function("nextBoss", &Instance::nextBoss)
-        
-        .class_<Instance::ItemRNG>("ItemRNG");
+        .function("nextBoss", &Instance::nextBoss);
+    function("packInfo", &packInfo);
 
     //items.hpp
     class_<ShopInstance>("ShopInstance")

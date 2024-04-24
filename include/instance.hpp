@@ -11,16 +11,19 @@ struct InstParams {
     std::string deck;
     std::string stake;
     bool showman;
+    int sixesFactor;
     std::vector<std::string> vouchers;
     InstParams() {
         deck = "Red Deck";
         stake = "White Stake";
         showman = false;
+        sixesFactor = 1;
     }
     InstParams(std::string d, std::string s, bool show) {
         deck = d;
         stake = s;
         showman = show;
+        sixesFactor = 1;
     }
 };
 
@@ -57,12 +60,14 @@ struct Instance {
         std::string item = items[rng.randint(0, items.size()-1)];
         if ((params.showman == false && isLocked(item)) || item == "RETRY") {
             int resample = 2;
-            while (isLocked(item)) {
+            while (true) {
                 rng = LuaRandom(get_node(ID+"_resample"+std::to_string(resample)));
                 std::string item = items[rng.randint(0, items.size()-1)];
                 resample++;
+                if (!isLocked(item) || resample > 1000) return item;
             }
         }
+        return item;
     }
     std::string randweightedchoice(std::string ID, std::vector<WeightedItem> items) {
         rng = LuaRandom(get_node(ID));
@@ -97,9 +102,9 @@ struct Instance {
     Card nextStandardCard(int ante);
     bool isVoucherActive(std::string voucher);
     void activateVoucher(std::string voucher);
+    std::string nextVoucher(int ante);
+    void setDeck(std::string deck);
+    void setStake(std::string stake);
     std::string nextTag(int ante);
     std::string nextBoss(int ante);
-
-    // To keep things a bit more organized, all the joker specific functions are in their own struct
-    struct ItemRNG;
 };

@@ -213,13 +213,15 @@ JokerData Instance::nextJoker(std::string source, int ante, bool hasStickers) {
     }
 
     // Get edition
-    // TODO: account for Hone
+    int editionRate = 1;
+    if (isVoucherActive("Glow Up")) editionRate = 4;
+    else if (isVoucherActive("Hone")) editionRate = 2;
     std::string edition;
     double editionPoll = random("edi"+source+anteStr);
     if (editionPoll > 0.997) edition = "Negative";
-    else if (editionPoll > 0.994) edition = "Polychrome";
-    else if (editionPoll > 0.98) edition = "Holographic";
-    else if (editionPoll > 0.96) edition = "Foil";
+    else if (editionPoll > 1 - 0.006 * editionRate) edition = "Polychrome";
+    else if (editionPoll > 1 - 0.02 * editionRate) edition = "Holographic";
+    else if (editionPoll > 1 - 0.04 * editionRate) edition = "Foil";
     else edition = "No Edition";
 
     // Get next joker
@@ -314,6 +316,15 @@ std::string Instance::nextPack(int ante) {
     std::string anteStr = std::to_string(ante);
     return randweightedchoice("shop_pack"+anteStr, PACKS);
 }
+Pack packInfo(std::string pack) {
+    if (pack[0] == 'M') {
+        return Pack(pack.substr(5), (pack[5] == 'B' || pack[6] == 'p') ? 4 : 5, 2);
+    } else if (pack[0] == 'J') {
+        return Pack(pack.substr(6), (pack[6] == 'B' || pack[7] == 'p') ? 4 : 5, 1);
+    } else {
+        return Pack(pack, (pack[0] == 'B' || pack[1] == 'p') ? 2 : 3, 1);
+    }
+}
 Card Instance::nextStandardCard(int ante) {
     std::string anteStr = std::to_string(ante);
 
@@ -347,10 +358,11 @@ Card Instance::nextStandardCard(int ante) {
     return Card(base, enhancement, edition, seal);
 }
 std::vector<std::string> Instance::nextArcanaPack(int size, int ante) {
-    // Todo: Account for Omen Globe
     std::vector<std::string> pack;
     for (int i = 0; i < size; i++) {
-        pack.push_back(nextTarot("ar1", ante, true));
+        if (isVoucherActive("Omen Globe") && random("omen_globe") > 0.8) {
+            pack.push_back(nextSpectral("ar2", ante, true));
+        } else pack.push_back(nextTarot("ar1", ante, true));
         if (!params.showman) lock(pack[i]);
     }
     for (int i = 0; i < size; i++) unlock(pack[i]);
@@ -404,6 +416,30 @@ void Instance::activateVoucher(std::string voucher) {
         };
     };
 };
+
+std::string Instance::nextVoucher(int ante) {
+    return randchoice("Voucher"+std::to_string(ante), VOUCHERS);
+}
+
+void Instance::setDeck(std::string deck) {
+    params.deck = deck;
+    if (deck == "Magic Deck") {
+        activateVoucher("Crystal Ball");
+    }
+    if (deck == "Nebula Deck") {
+        activateVoucher("Telescope");
+    }
+    if (deck == "Zodiac Deck") {
+        activateVoucher("Tarot Merchant");
+        activateVoucher("Planet Merchant");
+        activateVoucher("Overstock");
+    }
+}
+
+void Instance::setStake(std::string stake) {
+    params.stake = stake;
+}
+
 std::string Instance::nextTag(int ante) {
     return randchoice("Tag"+std::to_string(ante), TAGS);
 }
@@ -431,5 +467,3 @@ std::string Instance::nextBoss(int ante) {
     lock(chosenBoss);
     return chosenBoss;
 }
-
-// Todo: Deck initialization and manipulation

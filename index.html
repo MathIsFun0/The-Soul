@@ -3,7 +3,9 @@
   <script>
     var Immolate = {
       onRuntimeInitialized: function() {
-        
+        if (instantAnalysis) {
+          performAnalysis();
+        }
       }
     };
 
@@ -18,7 +20,12 @@
   </script>
   <script src="immolate.js"></script>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Sedan&display=swap');
+    @font-face {
+      font-family: 'm6x11';
+      src: url('/m6x11plus.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+    }
     
     body, h1, p {
       margin: 0;
@@ -26,16 +33,25 @@
     }
 
     body {
-      font-family: "Sedan", Arial, sans-serif;
+      font-family: "m6x11", Arial, sans-serif;
       line-height: 1.6;
       color: #333;
+      background-color: #a0c3ac;
     }
 
     h1 {
       text-align: center;
+      font-weight: normal;
       padding: 2rem 0;
-      background-color: #f4f4f4;
-      color: #444;
+      background-color: #006025;
+      color: #ffffff;
+    }
+    
+    h2 {
+      text-align: center;
+      font-weight: normal;
+      background-color: #006025;
+      color: #ffffff;
     }
 
     p {
@@ -43,6 +59,116 @@
       margin: 2rem auto;
       padding: 0 1rem;
       text-align: center;
+      font-size: 1.2em;
+    }
+
+    label {
+      font-size: 1.2em;
+    }
+
+    .container {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 20px;
+    }
+
+    .input-section {
+      flex: 1;
+      padding: 20px;
+      background-color: #f5f5f5;
+      border-radius: 5px;
+    }
+
+    .output-section {
+      flex: 1;
+      padding: 20px;
+      background-color: #f5f5f5;
+      border-radius: 5px;
+    }
+
+    textarea {
+      width: 100%;
+      resize: vertical;
+    }
+
+    /* Change the font and background color */
+    select {
+      font-family: "m6x11", sans-serif;
+      font-size: 1em;
+      background-color: #f2f2f2;
+      color: #333;
+    }
+
+    button {
+      font-family: "m6x11", sans-serif;
+      font-size: 1.5em;
+      background-color: #f2f2f2;
+      color: #333;
+    }
+
+    /* Remove the default arrow and add custom styling */
+    select {
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      background-image: url('path/to/custom-arrow.png');
+      background-repeat: no-repeat;
+      background-position: right 8px center;
+      padding-right: 25px; /* Adjust as needed to accommodate the custom arrow */
+    }
+
+    /* Add border and padding */
+    select {
+      border: 1px solid #ccc;
+      padding: 6px 10px;
+      border-radius: 4px;
+    }
+    button {
+      border: 1px solid #ccc;
+      padding: 6px 10px;
+      border-radius: 4px;
+    }
+
+    /* Style the dropdown options */
+    select option {
+      background-color: #fff;
+      color: #333;
+      padding: 6px 10px;
+    }
+
+    /* Change the font and background color */
+    input {
+      font-family: "m6x11", sans-serif;
+      font-size: 1em;
+      background-color: #f2f2f2;
+      color: #333;
+    }
+
+    /* Add border, padding, and rounded corners */
+    input {
+      border: 1px solid #ccc;
+      padding: 6px 10px;
+      border-radius: 4px;
+    }
+
+    /* Style the focused input box */
+    input:focus {
+      outline: none;
+      border-color: #6495ed;
+      box-shadow: 0 0 5px rgba(100, 149, 237, 0.5);
+    }
+
+    /* Style the number input box */
+    input[type="number"] {
+      width: 60px; /* Adjust as needed */
+    }
+
+    /* Style the text input box */
+    input[type="text"] {
+      width: 200px; /* Adjust as needed */
+    }
+    input[id="seed"] {
+      width: 80px; /* Adjust as needed */
     }
   </style>
   <head>
@@ -51,7 +177,345 @@
     <title>The Soul</title>
   </head>
   <body>
-    <h1>The Soul</h1>
-    <p>A seed analyzer for Balatro. Currently a heavy WIP.</p>
+    <h1>The Soul (Demo)</h1>
+    <div class="container">
+      <div class="input-section">
+        <h2>Settings</h2>
+        <label for="seed">Seed:</label>
+        <input type="text" id="seed" maxlength="8" pattern="[A-Z1-9]{1,8}" required>
+        <br>
+        <label for="ante">Max Ante:</label>
+        <input type="number" id="ante" min="1" max="39" value="8" required>
+        <br>
+        <label for="cardsPerAnte">Cards per Ante:</label>
+        <input type="text" id="cardsPerAnte" value = "15,50,50,50,50,50,50,50" required>
+        <br>
+        <label for="deck">Deck:</label>
+        <select id="deck" required>
+          <option value="Red Deck">Red Deck</option>
+          <option value="Blue Deck">Blue Deck</option>
+          <option value="Yellow Deck">Yellow Deck</option>
+          <option value="Green Deck">Green Deck</option>
+          <option value="Black Deck">Black Deck</option>
+          <option value="Magic Deck">Magic Deck</option>
+          <option value="Nebula Deck">Nebula Deck</option>
+          <option value="Ghost Deck">Ghost Deck</option>
+          <option value="Abandoned Deck">Abandoned Deck</option>
+          <option value="Checkered Deck">Checkered Deck</option>
+          <option value="Zodiac Deck">Zodiac Deck</option>
+          <option value="Painted Deck">Painted Deck</option>
+          <option value="Anaglyph Deck">Anaglyph Deck</option>
+          <option value="Plasma Deck">Plasma Deck</option>
+          <option value="Erratic Deck">Erratic Deck</option>
+          <!-- Add deck options here -->
+        </select>
+        <br>
+        <label for="stake">Stake:</label>
+        <select id="stake" required>
+          <option value="White Stake">White Stake</option>
+          <option value="Red Stake">Red Stake</option>
+          <option value="Green Stake">Green Stake</option>
+          <option value="Black Stake">Black Stake</option>
+          <option value="Blue Stake">Blue Stake</option>
+          <option value="Purple Stake">Purple Stake</option>
+          <option value="Orange Stake">Orange Stake</option>
+          <option value="Gold Stake">Gold Stake</option>
+          <!-- Add stake options here -->
+        </select>
+        <br>
+        <button id="analyzeButton">Analyze</button>
+        <button id="copyButton">Copy Link</button>
+      </div>
+      <div class="output-section">
+        <h2>Output</h2>
+        <textarea id="outputBox" rows="16" readonly></textarea>
+      </div>
+    </div>
   </body>
+  <script>
+    instantAnalysis = false;
+
+    const anteInput = document.getElementById('ante');
+    const cardsPerAnteInput = document.getElementById('cardsPerAnte');
+    const deckSelect = document.getElementById('deck');
+    const stakeSelect = document.getElementById('stake');
+    const seedInput = document.getElementById('seed');
+    const analyzeButton = document.getElementById('analyzeButton');
+    const copyLinkButton = document.getElementById('copyButton');
+    const outputBox = document.getElementById('outputBox');
+    
+    // Add event listener for the "Copy Link" button
+    copyLinkButton.addEventListener('click', copyLink);
+
+    function copyLink() {
+      const baseUrl = window.location.origin + window.location.pathname;
+      const params = new URLSearchParams();
+
+      // Add non-default input values as URL parameters
+      if (anteInput.value !== '8') params.append('ante', anteInput.value);
+      if (cardsPerAnteInput.value !== '15,50,50,50,50,50,50,50') params.append('cardsPerAnte', cardsPerAnteInput.value);
+      if (deckSelect.value !== 'Red Deck') params.append('deck', deckSelect.value);
+      if (stakeSelect.value !== 'White Stake') params.append('stake', stakeSelect.value);
+      if (seedInput.value !== '') params.append('seed', seedInput.value);
+
+      const url = `${baseUrl}?${params.toString()}`;
+
+      // Copy the URL to the clipboard
+      navigator.clipboard.writeText(url)
+        .then(() => {
+          alert('Link copied to clipboard!');
+        })
+        .catch((err) => {
+          console.error('Failed to copy link: ', err);
+        });
+    }
+
+    // Add event listener to the "Analysis" button
+    analyzeButton.addEventListener('click', performAnalysis);
+
+    function performAnalysis() {
+      // Get input values
+      const ante = parseInt(anteInput.value, 10);
+      const cardsPerAnte = cardsPerAnteInput.value.split(',').map(Number);
+      const deck = deckSelect.value;
+      const stake = stakeSelect.value;
+      const seed = seedInput.value.toUpperCase().replace(/0/g, 'O');
+
+      output = "";
+
+      // It's analysis time!
+      var inst = new Immolate.Instance(seed);
+      inst.initLocks(1, false, false);
+      inst.lock("Overstock Plus");
+      inst.lock("Liquidation");
+      inst.lock("Glow Up");
+      inst.lock("Reroll Glut");
+      inst.lock("Omen Globe");
+      inst.lock("Observatory");
+      inst.lock("Nacho Tong");
+      inst.lock("Recyclomancy");
+      inst.lock("Tarot Tycoon");
+      inst.lock("Planet Tycoon");
+      inst.lock("Money Tree");
+      inst.lock("Antimatter");
+      inst.lock("Illusion");
+      inst.lock("Petroglyph");
+      inst.lock("Retcon");
+      inst.lock("Palette");
+      inst.setStake(stake);
+      inst.setDeck(deck);
+      var ghostDeck = (deck == "Ghost Deck");
+      for (let a = 1; a <= ante; a++) {
+        inst.initUnlocks(a, false);
+        output += "==ANTE " + a + "==\n"
+        output += "Boss: " + inst.nextBoss(a) + "\n";
+        var voucher = inst.nextVoucher(a);
+        output += "Voucher: " + voucher + "\n";
+        inst.lock(voucher);
+        // Unlock next level voucher
+        for (let i = 0; i < Immolate.VOUCHERS.size(); i+=2) {
+            if (Immolate.VOUCHERS.get(i) == voucher) {
+                inst.unlock(Immolate.VOUCHERS.get(i+1));
+            };
+        };
+        output += "Tags: " + inst.nextTag(a) + ", " + inst.nextTag(a) + "\n";
+
+        output += "Shop Queue: \n";
+        for (let q = 1; q <= cardsPerAnte[a-1]; q++) {
+          output += q + ") ";
+          var item = inst.nextShopItem(a);
+          if (item.type == "Joker") {
+            if (item.jokerData.stickers.eternal) output += "Eternal ";
+            if (item.jokerData.stickers.perishable) output += "Perishable ";
+            if (item.jokerData.stickers.rental) output += "Rental ";
+            if (item.jokerData.edition != "No Edition") output += item.jokerData.edition + " ";
+          }
+          output += item.item + "\n";
+          item.delete();
+        }
+
+        output += "\nPacks: \n";
+        var numPacks = (inst == 1) ? 4 : 6;
+        for (let p = 1; p <= numPacks; p++) {
+          var pack = inst.nextPack(a);
+          output += pack + " - ";
+          var packInfo = Immolate.packInfo(pack);
+          if (packInfo.type == "Celestial Pack") {
+            var cards = inst.nextCelestialPack(packInfo.size, a);
+            for (let c = 0; c < packInfo.size; c++) {
+              output += cards.get(c);
+              output += (c + 1 != packInfo.size) ? ", " : "";
+            }
+            cards.delete();
+          }
+          if (packInfo.type == "Arcana Pack") {
+            var cards = inst.nextArcanaPack(packInfo.size, a);
+            for (let c = 0; c < packInfo.size; c++) {
+              output += cards.get(c);
+              output += (c + 1 != packInfo.size) ? ", " : "";
+            }
+            cards.delete();
+          }
+          if (packInfo.type == "Spectral Pack") {
+            var cards = inst.nextSpectralPack(packInfo.size, a);
+            for (let c = 0; c < packInfo.size; c++) {
+              output += cards.get(c);
+              output += (c + 1 != packInfo.size) ? ", " : "";
+            }
+            cards.delete();
+          }
+          if (packInfo.type == "Buffoon Pack") {
+            var cards = inst.nextBuffoonPack(packInfo.size, a);
+            for (let c = 0; c < packInfo.size; c++) {
+              var joker = cards.get(c);
+              if (joker.stickers.eternal) output += "Eternal ";
+              if (joker.stickers.perishable) output += "Perishable ";
+              if (joker.stickers.rental) output += "Rental ";
+              if (joker.edition != "No Edition") output += joker.edition + " ";
+              output += joker.joker;
+              joker.delete();
+              output += (c + 1 != packInfo.size) ? ", " : "";
+            }
+            cards.delete();
+          }
+          if (packInfo.type == "Standard Pack") {
+            var cards = inst.nextStandardPack(packInfo.size, a);
+            for (let c = 0; c < packInfo.size; c++) {
+              var card = cards.get(c);
+              if (card.seal != "No Seal") output += card.seal + " ";
+              if (card.edition != "No Edition") output += card.edition + " ";
+              if (card.enhancement != "No Enhancement") output += card.enhancement + " ";
+              var rank = card.base[2];
+              if (rank == "T") output += "10";
+              else if (rank == "J") output += "Jack";
+              else if (rank == "Q") output += "Queen";
+              else if (rank == "K") output += "King";
+              else if (rank == "A") output += "Ace";
+              else output += rank;
+              output += " of ";
+              var suit = card.base[0];
+              if (suit == "C") output += "Clubs";
+              else if (suit == "S") output += "Spades";
+              else if (suit == "D") output += "Diamonds";
+              else if (suit == "H") output += "Hearts";
+              card.delete();
+              output += (c + 1 != packInfo.size) ? ", " : "";
+            }
+            cards.delete();
+          }
+          output += "\n";
+        }
+
+        output += "\n";
+      };
+
+      inst.delete();
+
+      // Update output box with analysis result
+      outputBox.value = output;
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const seedInput = document.getElementById('seed');
+      const cardsPerAnteInput = document.getElementById('cardsPerAnte');
+      const anteInput = document.getElementById('ante');
+      const deckInput = document.getElementById('deck');
+      const stakeInput = document.getElementById('stake');
+
+      // Get seed value from URL parameters
+      const urlParams = new URLSearchParams(window.location.search);
+      const urlSeed = urlParams.get('seed');
+      const urlAnte = urlParams.get('ante');
+      const urlCardsPerAnte = urlParams.get('cardsPerAnte');
+      const urlDeck = urlParams.get('deck');
+      const urlStake = urlParams.get('stake');
+
+      // Set default seed value
+      if (urlAnte) {
+        anteInput.value = urlAnte;
+        anteInput.value = Math.min(anteInput.value, 39);
+        anteInput.value = Math.max(anteInput.value, 1);
+        cardsPerAnteInput.value = "15,50,50,50,50,50,50,50";
+        var input = cardsPerAnteInput.value.split(',').map(Number);
+        var fixedInput = []
+        for (let i = 0; i < anteInput.value; i++) {
+          if (input.length < i) {
+            fixedInput.push(0);
+          } else {
+            fixedInput.push(input[i]);
+          }
+          if (fixedInput[i] == undefined) fixedInput[i] = 0;
+          if (isNaN(fixedInput[i])) fixedInput[i] = 0;
+        }
+        cardsPerAnteInput.value = fixedInput;
+      }
+      if (urlCardsPerAnte) {
+        cardsPerAnteInput.value = urlCardsPerAnte;
+        var input = cardsPerAnteInput.value.split(',').map(Number);
+        var fixedInput = []
+        for (let i = 0; i < anteInput.value; i++) {
+          if (input.length < i) {
+            fixedInput.push(0);
+          } else {
+            fixedInput.push(input[i]);
+          }
+          if (fixedInput[i] == undefined) fixedInput[i] = 0;
+          if (isNaN(fixedInput[i])) fixedInput[i] = 0;
+        }
+        cardsPerAnteInput.value = fixedInput;
+      }
+      if (urlDeck) {
+        deckInput.value = urlDeck;
+      }
+      if (urlStake) {
+        stakeInput.value = urlStake;
+      }
+      if (urlSeed) {
+        seedInput.value = filterSeed(urlSeed);
+        instantAnalysis = true;
+      }
+
+      // Add event listener for input event
+      seedInput.addEventListener('input', () => {
+        seedInput.value = filterSeed(seedInput.value);
+      });
+      anteInput.addEventListener('input', () => {
+        anteInput.value = Math.min(anteInput.value, 39);
+        anteInput.value = Math.max(anteInput.value, 1);
+        var input = cardsPerAnteInput.value.split(',').map(Number);
+        var fixedInput = []
+        for (let i = 0; i < anteInput.value; i++) {
+          if (input.length < i) {
+            fixedInput.push(0);
+          } else {
+            fixedInput.push(input[i]);
+          }
+          if (fixedInput[i] == undefined) fixedInput[i] = 0;
+          if (isNaN(fixedInput[i])) fixedInput[i] = 0;
+        }
+        cardsPerAnteInput.value = fixedInput;
+      });
+      cardsPerAnteInput.addEventListener('input', () => {
+        var input = cardsPerAnteInput.value.split(',').map(Number);
+        var fixedInput = []
+        for (let i = 0; i < anteInput.value; i++) {
+          if (input.length < i) {
+            fixedInput.push(0);
+          } else {
+            fixedInput.push(input[i]);
+          }
+          if (fixedInput[i] == undefined) fixedInput[i] = 0;
+          if (isNaN(fixedInput[i])) fixedInput[i] = 0;
+        }
+        cardsPerAnteInput.value = fixedInput;
+      });
+
+      function filterSeed(seed) {
+        const filteredSeed = seed.replace(/[^A-Za-z0-9]/g, '').toUpperCase().replace(/0/g, 'O');
+
+        // Truncate the seed if it's longer than 8 characters
+        return filteredSeed.slice(0, 8);
+      }
+    });
+  </script>
 </html>
