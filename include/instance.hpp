@@ -12,18 +12,21 @@ struct InstParams {
     std::string stake;
     bool showman;
     int sixesFactor;
+    long version;
     std::vector<std::string> vouchers;
     InstParams() {
         deck = "Red Deck";
         stake = "White Stake";
         showman = false;
         sixesFactor = 1;
+        version = 10103; //1.0.1c
     }
-    InstParams(std::string d, std::string s, bool show) {
+    InstParams(std::string d, std::string s, bool show, long v) {
         deck = d;
         stake = s;
         showman = show;
         sixesFactor = 1;
+        version = v;
     }
 };
 

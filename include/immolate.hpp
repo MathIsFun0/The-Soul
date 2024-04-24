@@ -13,11 +13,12 @@ EMSCRIPTEN_BINDINGS(Immolate) {
     register_vector<Card>("VectorCrd");
     class_<InstParams>("InstParams")
         .constructor<>()
-        .constructor<std::string, std::string, bool>()
+        .constructor<std::string, std::string, bool, long>()
         .property("deck", &InstParams::deck)
         .property("stake", &InstParams::stake)
         .property("showman", &InstParams::showman)
-        .property("vouchers", &InstParams::vouchers);
+        .property("vouchers", &InstParams::vouchers)
+        .property("version", &InstParams::version);
     class_<Instance>("Instance")
         .constructor<std::string>()
         .function("get_node", &Instance::get_node)

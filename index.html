@@ -223,6 +223,13 @@
           <!-- Add stake options here -->
         </select>
         <br>
+        <label for="version">Version:</label>
+        <select id="version" required>
+          <option value="10103">1.0.1c</option>
+          <option value="10014">1.0.0n</option>
+          <!-- Add version options here -->
+        </select>
+        <br>
         <button id="analyzeButton">Analyze</button>
         <button id="copyButton">Copy Link</button>
       </div>
@@ -239,6 +246,7 @@
     const cardsPerAnteInput = document.getElementById('cardsPerAnte');
     const deckSelect = document.getElementById('deck');
     const stakeSelect = document.getElementById('stake');
+    const versionSelect = document.getElementById('version');
     const seedInput = document.getElementById('seed');
     const analyzeButton = document.getElementById('analyzeButton');
     const copyLinkButton = document.getElementById('copyButton');
@@ -256,6 +264,7 @@
       if (cardsPerAnteInput.value !== '15,50,50,50,50,50,50,50') params.append('cardsPerAnte', cardsPerAnteInput.value);
       if (deckSelect.value !== 'Red Deck') params.append('deck', deckSelect.value);
       if (stakeSelect.value !== 'White Stake') params.append('stake', stakeSelect.value);
+      if (versionSelect.value != '10103') params.append('version', versionSelect.value);
       if (seedInput.value !== '') params.append('seed', seedInput.value);
 
       const url = `${baseUrl}?${params.toString()}`;
@@ -279,12 +288,14 @@
       const cardsPerAnte = cardsPerAnteInput.value.split(',').map(Number);
       const deck = deckSelect.value;
       const stake = stakeSelect.value;
+      const version = parseInt(versionSelect.value);
       const seed = seedInput.value.toUpperCase().replace(/0/g, 'O');
 
       output = "";
 
       // It's analysis time!
       var inst = new Immolate.Instance(seed);
+      inst.params = new Immolate.InstParams(deck, stake, false, version);
       inst.initLocks(1, false, false);
       inst.lock("Overstock Plus");
       inst.lock("Liquidation");
@@ -421,6 +432,7 @@
       const anteInput = document.getElementById('ante');
       const deckInput = document.getElementById('deck');
       const stakeInput = document.getElementById('stake');
+      const versionInput = document.getElementById('version');
 
       // Get seed value from URL parameters
       const urlParams = new URLSearchParams(window.location.search);
@@ -429,6 +441,7 @@
       const urlCardsPerAnte = urlParams.get('cardsPerAnte');
       const urlDeck = urlParams.get('deck');
       const urlStake = urlParams.get('stake');
+      const urlVersion = urlParams.get('version');
 
       // Set default seed value
       if (urlAnte) {
@@ -473,6 +486,9 @@
       if (urlSeed) {
         seedInput.value = filterSeed(urlSeed);
         instantAnalysis = true;
+      }
+      if (urlVersion) {
+        versionInput.value = urlVersion;
       }
 
       // Add event listener for input event

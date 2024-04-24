@@ -226,10 +226,13 @@ JokerData Instance::nextJoker(std::string source, int ante, bool hasStickers) {
 
     // Get next joker
     std::string joker;
-    if (rarity == "4") joker = randchoice("Joker4", LEGENDARY_JOKERS);
-    else if (rarity == "3") joker = randchoice("Joker3"+source+anteStr, RARE_JOKERS);
-    else if (rarity == "2") joker = randchoice("Joker2"+source+anteStr, UNCOMMON_JOKERS);
-    else if (rarity == "1") joker = randchoice("Joker1"+source+anteStr, COMMON_JOKERS);
+    if (rarity == "4") {
+        if (params.version > 10099) joker = randchoice("Joker4", LEGENDARY_JOKERS);
+        else joker = randchoice("Joker4"+source+anteStr, LEGENDARY_JOKERS);
+    }
+    else if (rarity == "3") joker = randchoice("Joker3"+source+anteStr, (params.version > 10099) ? RARE_JOKERS : RARE_JOKERS_100);
+    else if (rarity == "2") joker = randchoice("Joker2"+source+anteStr, (params.version > 10099) ? UNCOMMON_JOKERS : UNCOMMON_JOKERS_100);
+    else if (rarity == "1") joker = randchoice("Joker1"+source+anteStr, (params.version > 10099) ? COMMON_JOKERS: COMMON_JOKERS_100);
 
     // Get next joker stickers
     JokerStickers stickers = JokerStickers();
@@ -241,11 +244,13 @@ JokerData Instance::nextJoker(std::string source, int ante, bool hasStickers) {
                 stickers.eternal = random("stake_shop_joker_eternal"+anteStr) > 0.7;
             }
         }
-        if (params.stake == "Orange Stake" || params.stake == "Gold Stake" && !stickers.eternal) {
-            stickers.perishable = random("ssjp"+anteStr) > 0.49;
-        }
-        if (params.stake == "Gold Stake") {
-            stickers.rental = random("ssjr"+anteStr) > 0.7;
+        if (params.version > 10099) {
+            if (params.stake == "Orange Stake" || params.stake == "Gold Stake" && !stickers.eternal) {
+                stickers.perishable = random("ssjp"+anteStr) > 0.49;
+            }
+            if (params.stake == "Gold Stake") {
+                stickers.rental = random("ssjr"+anteStr) > 0.7;
+            }
         }
     }
 
@@ -309,7 +314,7 @@ ShopItem Instance::nextShopItem(int ante) {
 
 // Packs and Pack Contents
 std::string Instance::nextPack(int ante) {
-    if (ante <= 2 && !cache.generatedFirstPack) {
+    if (ante <= 2 && !cache.generatedFirstPack && params.version > 10099) {
         cache.generatedFirstPack = true;
         return "Buffoon Pack";
     }
