@@ -42,6 +42,7 @@ struct Instance {
         hashedSeed = pseudohash(s);
         params = InstParams();
         rng = LuaRandom(0);
+        cache.generatedFirstPack = false;
     };
     double get_node(std::string ID) {
         if (cache.nodes.count(ID) == 0) {
