@@ -143,34 +143,10 @@
       background-color: #f2f2f2;
       color: #333;
     }
-
-    /* Add border, padding, and rounded corners */
-    input {
-      border: 1px solid #ccc;
-      padding: 6px 10px;
-      border-radius: 4px;
-    }
-
-    /* Style the focused input box */
-    input:focus {
-      outline: none;
-      border-color: #6495ed;
-      box-shadow: 0 0 5px rgba(100, 149, 237, 0.5);
-    }
-
-    /* Style the number input box */
-    input[type="number"] {
-      width: 60px; /* Adjust as needed */
-    }
-
-    /* Style the text input box */
-    input[type="text"] {
-      width: 200px; /* Adjust as needed */
-    }
-    input[id="seed"] {
-      width: 80px; /* Adjust as needed */
-    }
   </style>
+  
+  <script src="soul.js"></script>
+  <link rel="stylesheet" href="style.css">
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -181,54 +157,12 @@
     <div class="container">
       <div class="input-section">
         <h2>Settings</h2>
-        <label for="seed">Seed:</label>
-        <input type="text" id="seed" maxlength="8" pattern="[A-Z1-9]{1,8}" required>
-        <br>
         <label for="ante">Max Ante:</label>
         <input type="number" id="ante" min="1" max="39" value="8" required>
         <br>
         <label for="cardsPerAnte">Cards per Ante:</label>
         <input type="text" id="cardsPerAnte" value = "15,50,50,50,50,50,50,50" required>
         <br>
-        <label for="deck">Deck:</label>
-        <select id="deck" required>
-          <option value="Red Deck">Red Deck</option>
-          <option value="Blue Deck">Blue Deck</option>
-          <option value="Yellow Deck">Yellow Deck</option>
-          <option value="Green Deck">Green Deck</option>
-          <option value="Black Deck">Black Deck</option>
-          <option value="Magic Deck">Magic Deck</option>
-          <option value="Nebula Deck">Nebula Deck</option>
-          <option value="Ghost Deck">Ghost Deck</option>
-          <option value="Abandoned Deck">Abandoned Deck</option>
-          <option value="Checkered Deck">Checkered Deck</option>
-          <option value="Zodiac Deck">Zodiac Deck</option>
-          <option value="Painted Deck">Painted Deck</option>
-          <option value="Anaglyph Deck">Anaglyph Deck</option>
-          <option value="Plasma Deck">Plasma Deck</option>
-          <option value="Erratic Deck">Erratic Deck</option>
-          <!-- Add deck options here -->
-        </select>
-        <br>
-        <label for="stake">Stake:</label>
-        <select id="stake" required>
-          <option value="White Stake">White Stake</option>
-          <option value="Red Stake">Red Stake</option>
-          <option value="Green Stake">Green Stake</option>
-          <option value="Black Stake">Black Stake</option>
-          <option value="Blue Stake">Blue Stake</option>
-          <option value="Purple Stake">Purple Stake</option>
-          <option value="Orange Stake">Orange Stake</option>
-          <option value="Gold Stake">Gold Stake</option>
-          <!-- Add stake options here -->
-        </select>
-        <br>
-        <label for="version">Version:</label>
-        <select id="version" required>
-          <option value="10103">1.0.1c</option>
-          <option value="10014">1.0.0n</option>
-          <!-- Add version options here -->
-        </select>
         <br>
         <button id="analyzeButton">Analyze</button>
         <button id="copyButton">Copy Link</button>
@@ -240,6 +174,80 @@
         <button id="downloadButton" style="font-size: 1em">Download</button>
       </div>
     </div>
+    <div class="shop-area">
+      <div class="row">
+        <div class="buttons-container">
+          <button class="btn next-round" onclick="openSettings()">Settings</button>
+          <button class="btn reroll">
+            <span class="arrow left-arrow" onclick="decrementRerollNumber()">&lt;</span>
+            Reroll<br><input id="reroll-input" type="text" class="reroll-input" min="1" max="999" value="1" inputmode="numeric">
+            <span class="arrow right-arrow" onclick="incrementRerollNumber()">&gt;</span>
+          </button>
+        </div>
+        <div class="main-cards-container">
+          <div class="main-cards">
+            <div class="card"></div>
+            <div class="card"></div>
+            <div class="card"></div>
+            <div class="card"></div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="voucher-area">
+          <div class="card"></div>
+        </div>
+        <div class="pack-area">
+          <div class="card"></div>
+          <div class="card"></div>
+        </div>
+      </div>
+    </div>
+    <div id="settings" class="settings-menu">
+      <label for="seed">Seed:</label>
+      <input type="text" id="seed" maxlength="8" pattern="[A-Z1-9]{1,8}" required>
+      <br>
+      <label for="deck">Deck:</label>
+      <select id="deck" required>
+        <option value="Red Deck">Red Deck</option>
+        <option value="Blue Deck">Blue Deck</option>
+        <option value="Yellow Deck">Yellow Deck</option>
+        <option value="Green Deck">Green Deck</option>
+        <option value="Black Deck">Black Deck</option>
+        <option value="Magic Deck">Magic Deck</option>
+        <option value="Nebula Deck">Nebula Deck</option>
+        <option value="Ghost Deck">Ghost Deck</option>
+        <option value="Abandoned Deck">Abandoned Deck</option>
+        <option value="Checkered Deck">Checkered Deck</option>
+        <option value="Zodiac Deck">Zodiac Deck</option>
+        <option value="Painted Deck">Painted Deck</option>
+        <option value="Anaglyph Deck">Anaglyph Deck</option>
+        <option value="Plasma Deck">Plasma Deck</option>
+        <option value="Erratic Deck">Erratic Deck</option>
+        <!-- Add deck options here -->
+      </select>
+      <br>
+      <label for="stake">Stake:</label>
+      <select id="stake" required>
+        <option value="White Stake">White Stake</option>
+        <option value="Red Stake">Red Stake</option>
+        <option value="Green Stake">Green Stake</option>
+        <option value="Black Stake">Black Stake</option>
+        <option value="Blue Stake">Blue Stake</option>
+        <option value="Purple Stake">Purple Stake</option>
+        <option value="Orange Stake">Orange Stake</option>
+        <option value="Gold Stake">Gold Stake</option>
+        <!-- Add stake options here -->
+      </select>
+      <br>
+      <label for="version">Version:</label>
+      <select id="version" required>
+        <option value="10103">1.0.1c</option>
+        <option value="10014">1.0.0n</option>
+        <!-- Add version options here -->
+      </select>
+    </div>
+    <div id="overlay" class="overlay" onclick="closeSettings()"></div>
   </body>
   <script>
     instantAnalysis = false;

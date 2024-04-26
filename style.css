@@ -1,0 +1,169 @@
+.shop-area {
+    background-color: #333;
+    padding: 20px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 750px;
+    margin: auto;
+    gap: 10px; /* Added gap between rows */
+  }
+  
+  .row {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    gap: 10px; /* Added gap between sections */
+  }
+  
+  .buttons-container {
+    width: 25%;
+    display: flex;
+    flex-direction: column; /* Changed to column */
+    align-items: stretch; /* Added to make buttons stretch horizontally */
+  }
+  
+  .btn {
+    flex: 1;
+    margin: 5px 0; /* Changed margin to top/bottom */
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .next-round {
+    background-color: #ff4444;
+    color: #fff;
+    line-height: 0.9em;
+  }
+  
+  .reroll {
+    background-color: #4caf50;
+    color: #fff;
+    line-height: 1.25em;
+    position: relative;
+  }
+  .reroll-input {
+    width: 1.6em;
+    height: 0.5em;
+    padding: 5px;
+    margin: 0 5px;
+    border: none;
+    padding: none;
+    border-radius: 3px;
+    font-size: 2em;
+    text-align: center;
+    background-color: transparent;
+    color: #fff;
+    outline: none;
+  }
+  .arrow {
+    position: absolute;
+    top: 45%;
+    width: 20px;
+    height: 20px;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    font-size: 1.5em;
+  }
+  .left-arrow {
+    left: 1.1em;
+  }
+  .right-arrow {
+    right: 1.1em;
+  }
+  
+  .main-cards-container {
+    width: 75%;
+    background-color: #444;
+    border-radius: 10px;
+    padding: 10px;
+  }
+  
+  .main-cards {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+  }
+  
+  .voucher-area {
+    width: 50%;
+    background-color: #444;
+    border-radius: 10px;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .pack-area {
+    width: 50%;
+    background-color: #444;
+    border-radius: 10px;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+  }
+  
+  .card {
+    background-color: #555;
+    border-radius: 5px;
+    padding: 10px;
+    width: 100px;
+    height: 150px;
+  }
+  
+  
+  .settings-menu {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #222;
+    padding: 20px;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    z-index: 9999;
+    transition: opacity 0.3s ease-in-out;
+    color: #fff;
+    opacity: 0;
+  }
+  .overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    z-index: 9998;
+    transition: opacity 0.3s ease-in-out;
+    opacity: 0;
+  }
+
+/* Add border, padding, and rounded corners */
+input {
+    border: 1px solid #ccc;
+    padding: 6px 10px;
+    border-radius: 4px;
+    }
+
+    /* Style the focused input box */
+    input:focus {
+    outline: none;
+    border-color: #6495ed;
+    box-shadow: 0 0 5px rgba(100, 149, 237, 0.5);
+    }
+
+    /* Style the number input box */
+    input[type="number"] {
+    width: 60px; /* Adjust as needed */
+    }
+
+    input[id="seed"] {
+    width: 80px; /* Adjust as needed */
+    }
