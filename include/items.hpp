@@ -458,7 +458,7 @@ std::vector<std::string> UNCOMMON_JOKERS_100 = {
     "Bootstraps"
 };
 
-std::vector<std::string> UNCOMMON_JOKERS = {
+std::vector<std::string> UNCOMMON_JOKERS_101C = {
     "Joker Stencil",
     "Four Fingers",
     "Mime",
@@ -525,6 +525,73 @@ std::vector<std::string> UNCOMMON_JOKERS = {
     "Bootstraps"
 };
 
+std::vector<std::string> UNCOMMON_JOKERS = {
+    "Joker Stencil",
+    "Four Fingers",
+    "Mime",
+    "Ceremonial Dagger",
+    "Marble Joker",
+    "Loyalty Card",
+    "Dusk",
+    "Fibonacci",
+    "Steel Joker",
+    "Hack",
+    "Pareidolia",
+    "Space Joker",
+    "Burglar",
+    "Blackboard",
+    "Sixth Sense",
+    "Constellation",
+    "Hiker",
+    "Card Sharp",
+    "Madness",
+    "Seance",
+    "Vampire",
+    "Shortcut",
+    "Hologram",
+    "Cloud 9",
+    "Rocket",
+    "Midas Mask",
+    "Luchador",
+    "Gift Card",
+    "Turtle Bean",
+    "Erosion",
+    "To the Moon",
+    "Stone Joker",
+    "Lucky Cat",
+    "Bull",
+    "Diet Cola",
+    "Trading Card",
+    "Flash Card",
+    "Spare Trousers",
+    "Ramen",
+    "Seltzer",
+    "Castle",
+    "Mr. Bones",
+    "Acrobat",
+    "Sock and Buskin",
+    "Troubadour",
+    "Certificate",
+    "Smeared Joker",
+    "Throwback",
+    "Rough Gem",
+    "Bloodstone",
+    "Arrowhead",
+    "Onyx Agate",
+    "Glass Joker",
+    "Showman",
+    "Flower Pot",
+    "Merry Andy",
+    "Oops! All 6s",
+    "The Idol",
+    "Seeing Double",
+    "Matador",
+    "Satellite",
+    "Cartomancer",
+    "Astronomer",
+    "Bootstraps"
+};
+
 std::vector<std::string> RARE_JOKERS_100 = {
     "DNA",
     "Sixth Sense",
@@ -547,8 +614,7 @@ std::vector<std::string> RARE_JOKERS_100 = {
     "Drivers License"
 };
 
-
-std::vector<std::string> RARE_JOKERS = {
+std::vector<std::string> RARE_JOKERS_101C = {
     "DNA",
     "Vampire",
     "Vagabond",
@@ -565,6 +631,29 @@ std::vector<std::string> RARE_JOKERS = {
     "The Family",
     "The Order",
     "The Tribe",
+    "Invisible Joker",
+    "Brainstorm",
+    "Drivers License",
+    "Burnt Joker"
+};
+
+std::vector<std::string> RARE_JOKERS = {
+    "DNA",
+    "Vagabond",
+    "Baron",
+    "Obelisk",
+    "Baseball Card",
+    "Ancient Joker",
+    "Campfire",
+    "Blueprint",
+    "Wee Joker",
+    "Hit the Road",
+    "The Duo",
+    "The Trio",
+    "The Family",
+    "The Order",
+    "The Tribe",
+    "Stuntman",
     "Invisible Joker",
     "Brainstorm",
     "Drivers License",
