@@ -238,7 +238,7 @@ JokerData Instance::nextJoker(std::string source, int ante, bool hasStickers) {
     JokerStickers stickers = JokerStickers();
     if (hasStickers) {
         if (params.version > 10103) {
-            double stickerPoll = random("etperpoll"+anteStr);
+            double stickerPoll = random(((source=="buf") ? "packetper" : "etperpoll")+anteStr);
             if (stickerPoll > 0.7 && (params.stake == "Black Stake" || params.stake == "Blue Stake" || params.stake == "Purple Stake" || params.stake == "Orange Stake" || params.stake == "Gold Stake")) {
                 if (joker != "Gros Michel" && joker != "Ice Cream" && joker != "Cavendish" && joker != "Luchador"
                  && joker != "Turtle Bean" && joker != "Diet Cola" && joker != "Popcorn"   && joker != "Ramen"
@@ -255,7 +255,7 @@ JokerData Instance::nextJoker(std::string source, int ante, bool hasStickers) {
                 }
             }
             if (params.stake == "Gold Stake") {
-                stickers.rental = random("ssjr"+anteStr) > 0.7;
+                stickers.rental = random(((source=="buf") ? "packssjr" : "ssjr")+anteStr) > 0.7;
             }
         } else {
             if (params.stake == "Black Stake" || params.stake == "Blue Stake" || params.stake == "Purple Stake" || params.stake == "Orange Stake" || params.stake == "Gold Stake") {
