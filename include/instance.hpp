@@ -68,7 +68,7 @@ struct Instance {
                 rng = LuaRandom(get_node(ID+"_resample"+std::to_string(resample)));
                 std::string item = items[rng.randint(0, items.size()-1)];
                 resample++;
-                if (!isLocked(item) || resample > 1000) return item;
+                if ((item != "RETRY" && !isLocked(item)) || resample > 1000) return item;
             }
         }
         return item;

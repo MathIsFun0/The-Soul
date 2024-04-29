@@ -1,6 +1,7 @@
 #include <string>
 #include <vector>
 #include <cstdint>
+#include <limits>
 
 const uint64_t MAX_UINT64 = 18446744073709551615ull;
 
@@ -72,6 +73,7 @@ double pseudohash(std::string s) {
     double num = 1;
     for (size_t i = s.length(); i > 0; i--) {
         num = fract(1.1239285023/num*s[i-1]*3.141592653589793116+3.141592653589793116*i);
+        if (num > 1 || num < 0) return std::numeric_limits<double>::quiet_NaN();
     }
     return num;
 };

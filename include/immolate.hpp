@@ -115,5 +115,8 @@ EMSCRIPTEN_BINDINGS(Immolate) {
     constant("SPECTRALS", &SPECTRALS);
     constant("TAGS", &TAGS);
     constant("BOSSES", &BOSSES);
+
+    //util.hpp
+    function("pseudohash", &pseudohash);
 }
 #endif
