@@ -118,5 +118,9 @@ EMSCRIPTEN_BINDINGS(Immolate) {
 
     //util.hpp
     function("pseudohash", &pseudohash);
+    class_<LuaRandom>("LuaRandom")
+        .constructor<>()
+        .constructor<double>()
+        .function("random", &LuaRandom::random);
 }
 #endif
