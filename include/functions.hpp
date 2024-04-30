@@ -230,26 +230,48 @@ JokerData Instance::nextJoker(std::string source, int ante, bool hasStickers) {
         if (params.version > 10099) joker = randchoice("Joker4", LEGENDARY_JOKERS);
         else joker = randchoice("Joker4"+source+anteStr, LEGENDARY_JOKERS);
     }
-    else if (rarity == "3") joker = randchoice("Joker3"+source+anteStr, (params.version > 10099) ? RARE_JOKERS : RARE_JOKERS_100);
-    else if (rarity == "2") joker = randchoice("Joker2"+source+anteStr, (params.version > 10099) ? UNCOMMON_JOKERS : UNCOMMON_JOKERS_100);
-    else if (rarity == "1") joker = randchoice("Joker1"+source+anteStr, (params.version > 10099) ? COMMON_JOKERS: COMMON_JOKERS_100);
+    else if (rarity == "3") joker = randchoice("Joker3"+source+anteStr, (params.version > 10103) ? RARE_JOKERS : ((params.version > 10099) ? RARE_JOKERS_101C : RARE_JOKERS_100));
+    else if (rarity == "2") joker = randchoice("Joker2"+source+anteStr, (params.version > 10103) ? UNCOMMON_JOKERS : ((params.version > 10099) ? UNCOMMON_JOKERS_101C : UNCOMMON_JOKERS_100));
+    else if (rarity == "1") joker = randchoice("Joker1"+source+anteStr, (params.version > 10099) ? COMMON_JOKERS : COMMON_JOKERS_100);
 
     // Get next joker stickers
     JokerStickers stickers = JokerStickers();
     if (hasStickers) {
-        if (params.stake == "Black Stake" || params.stake == "Blue Stake" || params.stake == "Purple Stake" || params.stake == "Orange Stake" || params.stake == "Gold Stake") {
-            if (joker != "Gros Michel" && joker != "Ice Cream" && joker != "Cavendish" && joker != "Luchador"
-            && joker != "Turtle Bean" && joker != "Diet Cola" && joker != "Popcorn"   && joker != "Ramen"
-            && joker != "Seltzer"     && joker != "Mr. Bones" && joker != "Invisible Joker") {
-                stickers.eternal = random("stake_shop_joker_eternal"+anteStr) > 0.7;
+        if (params.version > 10103) {
+            double stickerPoll = random(((source=="buf") ? "packetper" : "etperpoll")+anteStr);
+            if (stickerPoll > 0.7 && (params.stake == "Black Stake" || params.stake == "Blue Stake" || params.stake == "Purple Stake" || params.stake == "Orange Stake" || params.stake == "Gold Stake")) {
+                if (joker != "Gros Michel" && joker != "Ice Cream" && joker != "Cavendish" && joker != "Luchador"
+                 && joker != "Turtle Bean" && joker != "Diet Cola" && joker != "Popcorn"   && joker != "Ramen"
+                 && joker != "Seltzer"     && joker != "Mr. Bones" && joker != "Invisible Joker") {
+                    stickers.eternal = true;
+                }
             }
-        }
-        if (params.version > 10099) {
-            if (params.stake == "Orange Stake" || params.stake == "Gold Stake" && !stickers.eternal) {
-                stickers.perishable = random("ssjp"+anteStr) > 0.49;
+            if ((stickerPoll > 0.4 && stickerPoll <= 0.7) && (params.stake == "Orange Stake" || params.stake == "Gold Stake")) {
+                if (joker != "Ceremonial Dagger" && joker != "Ride the Bus"   && joker != "Runner"  && joker != "Constellation"
+                 && joker != "Green Joker"       && joker != "Red Card"       && joker != "Madness" && joker != "Square Joker"
+                 && joker != "Vampire"           && joker != "Rocket"         && joker != "Obelisk" && joker != "Lucky Cat"
+                 && joker != "Flash Card"        && joker != "Spare Trousers" && joker != "Castle"  && joker != "Wee Joker") {
+                    stickers.perishable = true;
+                }
             }
             if (params.stake == "Gold Stake") {
-                stickers.rental = random("ssjr"+anteStr) > 0.7;
+                stickers.rental = random(((source=="buf") ? "packssjr" : "ssjr")+anteStr) > 0.7;
+            }
+        } else {
+            if (params.stake == "Black Stake" || params.stake == "Blue Stake" || params.stake == "Purple Stake" || params.stake == "Orange Stake" || params.stake == "Gold Stake") {
+                if (joker != "Gros Michel" && joker != "Ice Cream" && joker != "Cavendish" && joker != "Luchador"
+                 && joker != "Turtle Bean" && joker != "Diet Cola" && joker != "Popcorn"   && joker != "Ramen"
+                 && joker != "Seltzer"     && joker != "Mr. Bones" && joker != "Invisible Joker") {
+                    stickers.eternal = random("stake_shop_joker_eternal"+anteStr) > 0.7;
+                }
+            }
+            if (params.version > 10099) {
+                if ((params.stake == "Orange Stake" || params.stake == "Gold Stake") && !stickers.eternal) {
+                    stickers.perishable = random("ssjp"+anteStr) > 0.49;
+                }
+                if (params.stake == "Gold Stake") {
+                    stickers.rental = random("ssjr"+anteStr) > 0.7;
+                }
             }
         }
     }

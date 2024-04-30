@@ -21,9 +21,14 @@
     width: 25%;
     display: flex;
     flex-direction: column; /* Changed to column */
-    align-items: stretch; /* Added to make buttons stretch horizontally */
+    align-items: stretch;
   }
-  
+  .button-row {
+    height: 50%;
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+  }
   .btn {
     flex: 1;
     margin: 5px 0; /* Changed margin to top/bottom */
@@ -37,6 +42,17 @@
     background-color: #ff4444;
     color: #fff;
     line-height: 0.9em;
+    padding: 5px 5px;
+    margin-right: 5px;
+  }
+
+  .ante {
+    background-color: #444;
+    color: #ffffff;
+    line-height: 1em;
+    padding: 5px 5px;
+    margin-left: 5px;
+    position: relative;
   }
   
   .reroll {
@@ -47,9 +63,9 @@
   }
   .reroll-input {
     width: 1.6em;
-    height: 0.5em;
-    padding: 5px;
-    margin: 0 5px;
+    height: 0.7em;
+    padding: 0.1em;
+    margin: 0 0.1em;
     border: none;
     padding: none;
     border-radius: 3px;
@@ -57,6 +73,19 @@
     text-align: center;
     background-color: transparent;
     color: #fff;
+    outline: none;
+  }
+  .ante-input {
+    width: 1em;
+    height: 0.7em;
+    padding: 0.1em;
+    margin: 0.1em;
+    border: none;
+    border-radius: 3px;
+    font-size: 1.5em;
+    text-align: center;
+    background-color: transparent;
+    color: #e6a12b;
     outline: none;
   }
   .arrow {
@@ -74,6 +103,20 @@
   }
   .right-arrow {
     right: 1.1em;
+  }
+  .arrow-2 {
+    color: #e6a12b;
+    position: absolute;
+    top: 50%;
+    border: none;
+    cursor: pointer;
+    font-size: 1em;
+  }
+  .left-arrow-2 {
+    left: 0.6em;
+  }
+  .right-arrow-2 {
+    right: 0.6em;
   }
   
   .main-cards-container {

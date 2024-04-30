@@ -18,6 +18,7 @@ EMSCRIPTEN_BINDINGS(Immolate) {
         .property("stake", &InstParams::stake)
         .property("showman", &InstParams::showman)
         .property("vouchers", &InstParams::vouchers)
+        .property("resampling", &InstParams::resampling)
         .property("version", &InstParams::version);
     class_<Instance>("Instance")
         .constructor<std::string>()
@@ -115,5 +116,12 @@ EMSCRIPTEN_BINDINGS(Immolate) {
     constant("SPECTRALS", &SPECTRALS);
     constant("TAGS", &TAGS);
     constant("BOSSES", &BOSSES);
+
+    //util.hpp
+    function("pseudohash", &pseudohash);
+    class_<LuaRandom>("LuaRandom")
+        .constructor<>()
+        .constructor<double>()
+        .function("random", &LuaRandom::random);
 }
 #endif

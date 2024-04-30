@@ -13,6 +13,7 @@ struct InstParams {
     bool showman;
     int sixesFactor;
     long version;
+    bool resampling;
     std::vector<std::string> vouchers;
     InstParams() {
         deck = "Red Deck";
@@ -20,6 +21,7 @@ struct InstParams {
         showman = false;
         sixesFactor = 1;
         version = 10103; //1.0.1c
+        resampling = true;
     }
     InstParams(std::string d, std::string s, bool show, long v) {
         deck = d;
@@ -27,6 +29,7 @@ struct InstParams {
         showman = show;
         sixesFactor = 1;
         version = v;
+        resampling = true;
     }
 };
 
@@ -62,13 +65,13 @@ struct Instance {
     std::string randchoice(std::string ID, std::vector<std::string> items) {
         rng = LuaRandom(get_node(ID));
         std::string item = items[rng.randint(0, items.size()-1)];
-        if ((params.showman == false && isLocked(item)) || item == "RETRY") {
+        if (params.resampling && (params.showman == false && isLocked(item)) || item == "RETRY") {
             int resample = 2;
             while (true) {
                 rng = LuaRandom(get_node(ID+"_resample"+std::to_string(resample)));
                 std::string item = items[rng.randint(0, items.size()-1)];
                 resample++;
-                if (!isLocked(item) || resample > 1000) return item;
+                if ((item != "RETRY" && !isLocked(item)) || resample > 1000) return item;
             }
         }
         return item;

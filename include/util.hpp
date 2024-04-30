@@ -1,6 +1,8 @@
 #include <string>
 #include <vector>
 #include <cstdint>
+#include <limits>
+#include <cmath>
 
 const uint64_t MAX_UINT64 = 18446744073709551615ull;
 
@@ -65,7 +67,7 @@ struct LuaRandom {
 };
 
 double fract(double n) {
-    return n - (long)n;
+    return fmod(n, 1);
 };
 
 double pseudohash(std::string s) {
@@ -73,5 +75,6 @@ double pseudohash(std::string s) {
     for (size_t i = s.length(); i > 0; i--) {
         num = fract(1.1239285023/num*s[i-1]*3.141592653589793116+3.141592653589793116*i);
     }
+    if (isnan(num)) return std::numeric_limits<double>::quiet_NaN();
     return num;
 };
