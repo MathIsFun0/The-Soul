@@ -3,6 +3,9 @@
 #include <cstdint>
 #include <limits>
 #include <cmath>
+#include <iostream>
+#include <sstream>
+#include <iomanip>
 
 const uint64_t MAX_UINT64 = 18446744073709551615ull;
 
@@ -78,3 +81,9 @@ double pseudohash(std::string s) {
     if (isnan(num)) return std::numeric_limits<double>::quiet_NaN();
     return num;
 };
+
+double round13(double num) {
+    std::ostringstream stream;
+    stream << std::fixed << std::setprecision(13) << num;
+    return std::stod(stream.str());
+}

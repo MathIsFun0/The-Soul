@@ -1,4 +1,5 @@
 #include <map>
+#include <iomanip>
 #include <string>
 #pragma once
 
@@ -48,7 +49,7 @@ struct Instance {
         if (cache.nodes.count(ID) == 0) {
             cache.nodes[ID] = pseudohash(ID+seed);
         }
-        cache.nodes[ID] = round(fract(cache.nodes[ID]*1.72431234+2.134453429141)*1e13)/1e13;
+        cache.nodes[ID] = std::fmod(round13(cache.nodes[ID]*1.72431234+2.134453429141),1);
         return (cache.nodes[ID] + hashedSeed)/2;
     }
     double random(std::string ID) {
