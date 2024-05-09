@@ -170,6 +170,44 @@
     input[id="seed"] {
       width: 80px; /* Adjust as needed */
     }
+
+    #checkboxesOverlay {
+      display: none;
+      position: fixed;
+      z-index: 1;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0, 0, 0, 0.4);
+    }
+
+    #checkboxesPopup {
+      background-color: #fefefe;
+      margin: 15% auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 75%;
+    }
+
+    .checkbox-column {
+      float: left;
+      width: 16.66%;
+      box-sizing: border-box;
+      padding: 0 10px;
+    }
+
+    .checkbox-column label {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .clearfix::after {
+      content: "";
+      clear: both;
+      display: table;
+    }
   </style>
   <head>
     <meta charset="UTF-8">
@@ -231,6 +269,15 @@
           <!-- Add version options here -->
         </select>
         <br>
+        <button id="openCheckboxesBtn">Modify Unlocks</button>
+        <div id="checkboxesOverlay">
+          <div id="checkboxesPopup">
+            <h2>Unlocked Items</h2>
+            <div id="checkboxesContainer" class="clearfix"></div>
+            <button id="submitBtn">Submit</button>
+          </div>
+        </div>
+        <br>
         <button id="analyzeButton">Analyze</button>
         <button id="copyButton">Copy Link</button>
       </div>
@@ -243,6 +290,136 @@
     </div>
   </body>
   <script>
+    //Unlocks stuff
+    // Option values
+    const options = ["Negative Tag",
+                    "Foil Tag",
+                    "Holographic Tag",
+                    "Polychrome Tag",
+                    "Rare Tag",
+                    "Golden Ticket",
+                    "Mr. Bones",
+                    "Acrobat",
+                    "Sock and Buskin",
+                    "Swashbuckler",
+                    "Troubadour",
+                    "Certificate",
+                    "Smeared Joker",
+                    "Throwback",
+                    "Hanging Chad",
+                    "Rough Gem",
+                    "Bloodstone",
+                    "Arrowhead",
+                    "Onyx Agate",
+                    "Glass Joker",
+                    "Showman",
+                    "Flower Pot",
+                    "Blueprint",
+                    "Wee Joker",
+                    "Merry Andy",
+                    "Oops! All 6s",
+                    "The Idol",
+                    "Seeing Double",
+                    "Matador",
+                    "Hit the Road",
+                    "The Duo",
+                    "The Trio",
+                    "The Family",
+                    "The Order",
+                    "The Tribe",
+                    "Stuntman",
+                    "Invisible Joker",
+                    "Brainstorm",
+                    "Satellite",
+                    "Shoot the Moon",
+                    "Driver's License",
+                    "Cartomancer",
+                    "Astronomer",
+                    "Burnt Joker",
+                    "Bootstraps",
+                    "Overstock Plus",
+                    "Liquidation",
+                    "Glow Up",
+                    "Reroll Glut",
+                    "Omen Globe",
+                    "Observatory",
+                    "Nacho Tong",
+                    "Recyclomancy",
+                    "Tarot Tycoon",
+                    "Planet Tycoon",
+                    "Money Tree",
+                    "Antimatter",
+                    "Illusion",
+                    "Petroglyph",
+                    "Retcon",
+                    "Palette"]
+    selectedOptions = Array(61).fill(true);
+
+    // Get references to elements
+    const openCheckboxesBtn = document.getElementById('openCheckboxesBtn');
+    const checkboxesOverlay = document.getElementById('checkboxesOverlay');
+    const checkboxesPopup = document.getElementById('checkboxesPopup');
+    const checkboxesContainer = document.getElementById('checkboxesContainer');
+    const submitBtn = document.getElementById('submitBtn');
+
+    // Function to create checkboxes
+    function createCheckboxes() {
+      checkboxesContainer.innerHTML = '';
+      const numColumns = 6;
+      const optionsPerColumn = Math.ceil(options.length / numColumns);
+
+      for (let i = 0; i < numColumns; i++) {
+        const columnDiv = document.createElement('div');
+        columnDiv.classList.add('checkbox-column');
+
+        for (let j = i * optionsPerColumn; j < (i + 1) * optionsPerColumn && j < options.length; j++) {
+          const checkbox = document.createElement('input');
+          checkbox.type = 'checkbox';
+          checkbox.value = options[j];
+          checkbox.checked = selectedOptions[j]; // Set checkboxes as selected by default
+          const label = document.createElement('label');
+          label.textContent = options[j];
+          label.prepend(checkbox);
+          columnDiv.appendChild(label);
+        }
+
+        checkboxesContainer.appendChild(columnDiv);
+      }
+    }
+
+    // Function to handle checkbox selections
+    function handleSubmit() {
+      const checkboxes = checkboxesContainer.querySelectorAll('input[type="checkbox"]');
+      selectedOptions = [];
+      checkboxes.forEach(checkbox => {
+        selectedOptions.push(checkbox.checked);
+      });
+      console.log('Selected Options:', selectedOptions);
+      // Do something with the selected options
+      closeOverlay();
+    }
+
+    // Function to open the checkbox overlay
+    function openOverlay() {
+      createCheckboxes();
+      checkboxesOverlay.style.display = 'block';
+    }
+
+    // Function to close the checkbox overlay
+    function closeOverlay() {
+      checkboxesOverlay.style.display = 'none';
+    }
+
+    // Event listeners
+    openCheckboxesBtn.addEventListener('click', openOverlay);
+    window.addEventListener('click', (event) => {
+      if (event.target == checkboxesOverlay) {
+        closeOverlay();
+      }
+    });
+    submitBtn.addEventListener('click', handleSubmit);
+
+
     instantAnalysis = false;
 
     const anteInput = document.getElementById('ante');
@@ -263,13 +440,35 @@
       const baseUrl = window.location.origin + window.location.pathname;
       const params = new URLSearchParams();
 
+      // Hash the unlocks
+      // Convert the array of booleans to a binary string
+      const binaryString = selectedOptions.map(unlock => unlock ? '1' : '0').join('');
+
+      // Convert the binary string to a byte array
+      const byteArray = [];
+      for (let i = 0; i < binaryString.length; i += 8) {
+        const byte = parseInt(binaryString.substr(i, 8), 2);
+        byteArray.push(byte);
+      }
+
+      // Pad the byte array with a null byte if necessary
+      if (binaryString.length % 8 !== 0) {
+        const paddingBits = '0'.repeat(8 - (binaryString.length % 8));
+        const paddingByte = parseInt(`${binaryString.slice(-binaryString.length % 8)}${paddingBits}`, 2);
+        byteArray.push(paddingByte);
+      }
+
+      // Encode the byte array to base64
+      const base64Unlocks = btoa(String.fromCharCode.apply(null, byteArray));
+
       // Add non-default input values as URL parameters
       if (anteInput.value !== '8') params.append('ante', anteInput.value);
       if (cardsPerAnteInput.value !== '15,50,50,50,50,50,50,50') params.append('cardsPerAnte', cardsPerAnteInput.value);
       if (deckSelect.value !== 'Red Deck') params.append('deck', deckSelect.value);
       if (stakeSelect.value !== 'White Stake') params.append('stake', stakeSelect.value);
-      if (versionSelect.value != '10105') params.append('version', versionSelect.value);
+      if (versionSelect.value != '10106') params.append('version', versionSelect.value);
       if (seedInput.value !== '') params.append('seed', seedInput.value);
+      if (base64Unlocks != '/////////x/4') params.append('unlocks', base64Unlocks);
 
       const url = `${baseUrl}?${params.toString()}`;
 
@@ -332,6 +531,9 @@
       inst.lock("Petroglyph");
       inst.lock("Retcon");
       inst.lock("Palette");
+      for (let i = 0; i < options.length; i++) {
+        if (selectedOptions[i] == false) inst.lock(options[i]);
+      }
       inst.setStake(stake);
       inst.setDeck(deck);
       var ghostDeck = (deck == "Ghost Deck");
@@ -345,7 +547,10 @@
         // Unlock next level voucher
         for (let i = 0; i < Immolate.VOUCHERS.size(); i+=2) {
             if (Immolate.VOUCHERS.get(i) == voucher) {
-                inst.unlock(Immolate.VOUCHERS.get(i+1));
+                // Only unlock it if it's unlockable
+                if (selectedOptions[options.indexOf(Immolate.VOUCHERS.get(i+1))]) {
+                  inst.unlock(Immolate.VOUCHERS.get(i+1));
+                };
             };
         };
         output += "Tags: " + inst.nextTag(a) + ", " + inst.nextTag(a) + "\n";
@@ -461,6 +666,23 @@
       const urlDeck = urlParams.get('deck');
       const urlStake = urlParams.get('stake');
       const urlVersion = urlParams.get('version');
+      const urlUnlocks = urlParams.get('unlocks');
+
+      if (urlUnlocks) {
+        // Decode the base64 string
+        const binaryString = atob(urlUnlocks)
+          .split('')
+          .map(char => char.charCodeAt(0).toString(2).padStart(8, '0'))
+          .join('');
+
+        // Remove the padding byte (if present)
+        const paddingLength = binaryString.length % 8;
+        const unpadded = paddingLength > 0 ? binaryString.slice(0, -paddingLength) : binaryString;
+
+        // Convert the binary string back to an array of booleans
+        const decodedUnlocks = unpadded.split('').map(bit => bit === '1');
+        selectedOptions = decodedUnlocks;
+      }
 
       // Set default seed value
       if (urlAnte) {

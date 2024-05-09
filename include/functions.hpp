@@ -49,6 +49,7 @@ void Instance::initLocks(int ante, bool freshProfile, bool freshRun) {
         lock("Foil Tag");
         lock("Holographic Tag");
         lock("Polychrome Tag");
+        lock("Rare Tag");
         lock("Golden Ticket");
         lock("Mr. Bones");
         lock("Acrobat");
