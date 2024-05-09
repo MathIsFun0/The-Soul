@@ -275,6 +275,8 @@
             <h2>Unlocked Items</h2>
             <div id="checkboxesContainer" class="clearfix"></div>
             <button id="submitBtn">Submit</button>
+            <button id="unlockBtn">Unlock All</button>
+            <button id="lockBtn">Lock All</button>
           </div>
         </div>
         <br>
@@ -361,6 +363,8 @@
     const checkboxesPopup = document.getElementById('checkboxesPopup');
     const checkboxesContainer = document.getElementById('checkboxesContainer');
     const submitBtn = document.getElementById('submitBtn');
+    const lockBtn = document.getElementById('lockBtn');
+    const unlockBtn = document.getElementById('unlockBtn');
 
     // Function to create checkboxes
     function createCheckboxes() {
@@ -398,6 +402,20 @@
       // Do something with the selected options
       closeOverlay();
     }
+    function handleLock() {
+      const checkboxes = checkboxesContainer.querySelectorAll('input[type="checkbox"]');
+      selectedOptions = [];
+      checkboxes.forEach(checkbox => {
+        checkbox.checked = false
+      });
+    }
+    function handleUnlock() {
+      const checkboxes = checkboxesContainer.querySelectorAll('input[type="checkbox"]');
+      selectedOptions = [];
+      checkboxes.forEach(checkbox => {
+        checkbox.checked = true
+      });
+    }
 
     // Function to open the checkbox overlay
     function openOverlay() {
@@ -418,6 +436,8 @@
       }
     });
     submitBtn.addEventListener('click', handleSubmit);
+    lockBtn.addEventListener('click', handleLock);
+    unlockBtn.addEventListener('click', handleUnlock);
 
 
     instantAnalysis = false;
