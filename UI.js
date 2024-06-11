@@ -14,6 +14,10 @@ const tags = [
 const vouchers = [
     { "name": "Overstock", "pos": { "x": 0, "y": 0 } }, { "name": "Clearance Sale", "pos": { "x": 3, "y": 0 } }, { "name": "Hone", "pos": { "x": 4, "y": 0 } }, { "name": "Reroll Surplus", "pos": { "x": 0, "y": 2 } }, { "name": "Crystal Ball", "pos": { "x": 2, "y": 2 } }, { "name": "Telescope", "pos": { "x": 3, "y": 2 } }, { "name": "Grabber", "pos": { "x": 5, "y": 0 } }, { "name": "Wasteful", "pos": { "x": 6, "y": 0 } }, { "name": "Tarot Merchant", "pos": { "x": 1, "y": 0 } }, { "name": "Planet Merchant", "pos": { "x": 2, "y": 0 } }, { "name": "Seed Money", "pos": { "x": 1, "y": 2 } }, { "name": "Blank", "pos": { "x": 7, "y": 0 } }, { "name": "Magic Trick", "pos": { "x": 4, "y": 2 } }, { "name": "Hieroglyph", "pos": { "x": 5, "y": 2 } }, { "name": "Director's Cut", "pos": { "x": 6, "y": 2 } }, { "name": "Paint Brush", "pos": { "x": 7, "y": 2 } }, { "name": "Overstock Plus", "pos": { "x": 0, "y": 1 } }, { "name": "Liquidation", "pos": { "x": 3, "y": 1 } }, { "name": "Glow Up", "pos": { "x": 4, "y": 1 } }, { "name": "Reroll Glut", "pos": { "x": 0, "y": 3 } }, { "name": "Omen Globe", "pos": { "x": 2, "y": 3 } }, { "name": "Observatory", "pos": { "x": 3, "y": 3 } }, { "name": "Nacho Tong", "pos": { "x": 5, "y": 1 } }, { "name": "Recyclomancy", "pos": { "x": 6, "y": 1 } }, { "name": "Tarot Tycoon", "pos": { "x": 1, "y": 1 } }, { "name": "Planet Tycoon", "pos": { "x": 2, "y": 1 } }, { "name": "Money Tree", "pos": { "x": 1, "y": 3 } }, { "name": "Antimatter", "pos": { "x": 7, "y": 1 } }, { "name": "Illusion", "pos": { "x": 4, "y": 3 } }, { "name": "Petroglyph", "pos": { "x": 5, "y": 3 } }, { "name": "Retcon", "pos": { "x": 6, "y": 3 } }, { "name": "Palette", "pos": { "x": 7, "y": 3 } }
 ];
+
+const bosses = [
+    { "name": "Small Blind", "pos": { "x": 0, "y": 0 } }, { "name": "Big Blind", "pos": { "x": 0, "y": 1 } }, { "name": "The Ox", "pos": { "x": 0, "y": 2 } }, { "name": "The Hook", "pos": { "x": 0, "y": 7 } }, { "name": "The Mouth", "pos": { "x": 0, "y": 18 } }, { "name": "The Fish", "pos": { "x": 0, "y": 5 } }, { "name": "The Club", "pos": { "x": 0, "y": 4 } }, { "name": "The Manacle", "pos": { "x": 0, "y": 8 } }, { "name": "The Tooth", "pos": { "x": 0, "y": 22 } }, { "name": "The Wall", "pos": { "x": 0, "y": 9 } }, { "name": "The House", "pos": { "x": 0, "y": 3 } }, { "name": "The Mark", "pos": { "x": 0, "y": 23 } }, { "name": "Cerulean Bell", "pos": { "x": 0, "y": 26 } }, { "name": "The Wheel", "pos": { "x": 0, "y": 10 } }, { "name": "The Arm", "pos": { "x": 0, "y": 11 } }, { "name": "The Psychic", "pos": { "x": 0, "y": 12 } }, { "name": "The Goad", "pos": { "x": 0, "y": 13 } }, { "name": "The Water", "pos": { "x": 0, "y": 14 } }, { "name": "The Eye", "pos": { "x": 0, "y": 17 } }, { "name": "The Plant", "pos": { "x": 0, "y": 19 } }, { "name": "The Needle", "pos": { "x": 0, "y": 20 } }, { "name": "The Head", "pos": { "x": 0, "y": 21 } }, { "name": "Verdant Leaf", "pos": { "x": 0, "y": 28 } }, { "name": "Violet Vessel", "pos": { "x": 0, "y": 29 } }, { "name": "The Window", "pos": { "x": 0, "y": 6 } }, { "name": "The Serpent", "pos": { "x": 0, "y": 15 } }, { "name": "The Pillar", "pos": { "x": 0, "y": 16 } }, { "name": "The Flint", "pos": { "x": 0, "y": 24 } }, { "name": "Amber Acorn", "pos": { "x": 0, "y": 27 } }, { "name": "Crimson Heart", "pos": { "x": 0, "y": 25 } }
+];
 const editionMap = {
     "Foil": 1,
     "Holographic": 2,
@@ -297,6 +301,34 @@ function getModifierColor(modifier) {
     return '#ffffff'; // White (default)
 }
 
+function renderBoss(canvas, bossName) {
+    const bossData = bosses.find(boss => boss.name === bossName);
+    if (!bossData) {
+        console.error("Boss not found:", bossName);
+        return;
+    }
+
+    const ctx = canvas.getContext('2d');
+    const img = new Image();
+    img.src = 'images/BlindChips.png';
+    img.onload = function () {
+        const bossWidth = 714 / 21;
+        const bossHeight = 1054 / 31;
+
+        ctx.drawImage(
+            img,
+            bossData.pos.x * bossWidth,
+            bossData.pos.y * bossHeight,
+            bossWidth,
+            bossHeight,
+            0,
+            0,
+            canvas.width,
+            canvas.height
+        );
+    };
+}
+
 function renderTag(canvas, tagName) {
     const tagData = tags.find(tag => tag.name === tagName);
     if (!tagData) {
@@ -359,7 +391,7 @@ function searchAndHighlight() {
         .map(term => term.trim().toLowerCase())
         .filter(term => term.length >= 4); // Filter out terms less than 4 letters
 
-    const queueItems = document.querySelectorAll('.queueItem, .packItem > div, .voucherContainer, .tagContainer');
+    const queueItems = document.querySelectorAll('.queueItem, .packItem > div, .voucherContainer, .tagContainer, .bossContainer');
 
     queueItems.forEach(item => {
         const itemText = item.textContent.toLowerCase();
@@ -632,6 +664,27 @@ function searchAndHighlight() {
     border-radius: 3px;
     box-shadow: 0px 0px 20px 15px rgba(150, 237, 121, 0.3);
 }
+.bossContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    font-size: 10px;
+    margin-right: 5px;
+}
+
+.bossContainer canvas {
+    margin-bottom: 3px;
+    pointer-events: none;
+}
+
+.bossName {
+    font-size: 10px;
+    margin-bottom: 3px;
+    word-wrap: break-word;
+    color: #ffffff;
+}
+
 `;
     document.head.appendChild(style);
 
@@ -656,7 +709,7 @@ function searchAndHighlight() {
     scrollingContainer.id = 'scrollingContainer';
     document.body.appendChild(scrollingContainer);
 
-    document.getElementById('searchInput').addEventListener('keydown', function(event) {
+    document.getElementById('searchInput').addEventListener('keydown', function (event) {
         if (event.key === 'Enter') {
             const highlightedItem = document.querySelector('.highlight');
             if (highlightedItem) {
@@ -754,7 +807,7 @@ function searchAndHighlight() {
             const queueInfo = document.createElement('div');
             queueInfo.className = 'queueInfo';
 
-            
+
 
             const voucherElement = document.createElement('div');
             voucherElement.innerHTML = '<b><u>Voucher</u></b>';
@@ -778,12 +831,33 @@ function searchAndHighlight() {
             }
             queueInfo.appendChild(voucherElement);
 
+            const bossElement = document.createElement('div');
+            bossElement.innerHTML = '<b><u>Boss</u></b>';
+            bossElement.style = "font-size: 16px";
+
+            if (boss) {
+                const bossContainer = document.createElement('div');
+                bossContainer.className = 'bossContainer';
+
+                const bossCanvas = document.createElement('canvas');
+                bossCanvas.width = 34;
+                bossCanvas.height = 34;
+                renderBoss(bossCanvas, boss);
+                bossContainer.appendChild(bossCanvas);
+
+                const bossNameElement = document.createElement('div');
+                bossNameElement.textContent = boss;
+                bossNameElement.classList.add('bossName');
+                bossContainer.appendChild(bossNameElement);
+
+                bossElement.appendChild(bossContainer);
+            }
+
+            queueInfo.appendChild(bossElement);
+
             const tagsElement = document.createElement('div');
-            tagsElement.innerHTML = `<b><u>Boss</u></b><br> ${boss} <br><b><u>Tags</u></b> `;
-
+            tagsElement.innerHTML = '<b><u>Tags</u></b>';
             tagsElement.style = "font-size: 16px";
-
-
 
             const tagsContainer = document.createElement('div');
             tagsContainer.className = 'tagsContainer';
@@ -805,7 +879,6 @@ function searchAndHighlight() {
 
                 tagsContainer.appendChild(tagContainer);
             });
-          
 
             tagsElement.appendChild(tagsContainer);
             queueInfo.appendChild(tagsElement);
