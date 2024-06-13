@@ -385,23 +385,52 @@ function renderVoucher(canvas, voucherName) {
     };
 }
 
+let currentHighlightIndex = -1;
 function searchAndHighlight() {
     const searchInput = document.getElementById('searchInput');
-    const searchTerms = searchInput.value.split(',')
-        .map(term => term.trim().toLowerCase())
-        .filter(term => term.length >= 4); // Filter out terms less than 4 letters
+    const input = searchInput.value.toLowerCase().trim();
+
+    // Split input by comma
+    const commaSeparatedTerms = input.split(',')
+        .map(term => term.trim())
+        .filter(term => term.length >= 3); // Filter out terms less than 3 letters
 
     const queueItems = document.querySelectorAll('.queueItem, .packItem > div, .voucherContainer, .tagContainer, .bossContainer');
 
     queueItems.forEach(item => {
         const itemText = item.textContent.toLowerCase();
-        const shouldHighlight = searchTerms.some(term => itemText.includes(term));
+        let shouldHighlight = false;
+
+        for (let term of commaSeparatedTerms) {
+            // Split term by spaces for the AND logic
+            const spaceSeparatedTerms = term.split(/\s+/)
+                .map(subTerm => subTerm.trim())
+                .filter(subTerm => subTerm.length >= 3);
+
+            // Skip if spaceSeparatedTerms is empty
+            if (spaceSeparatedTerms.length === 0) continue;
+
+            // Create a regex pattern to match terms in any order
+            const regexPattern = spaceSeparatedTerms.map(subTerm => `(?=.*${subTerm})`).join('');
+            const regex = new RegExp(regexPattern, 'i'); // 'i' for case insensitive
+
+            // If any term matches, set shouldHighlight to true
+            if (regex.test(itemText)) {
+                shouldHighlight = true;
+                break;
+            }
+        }
+
         if (shouldHighlight) {
             item.classList.add('highlight');
         } else {
             item.classList.remove('highlight');
         }
     });
+
+
+    // Reset the highlight index if the search input changes
+    currentHighlightIndex = -1;
 }
 
 (function () {
@@ -695,7 +724,7 @@ function searchAndHighlight() {
 
     const searchLabel = document.createElement('label');
     searchLabel.setAttribute('for', 'searchInput');
-    searchLabel.textContent = 'Press enter to search (comma separated values, min length 4 char)';
+    searchLabel.textContent = 'Press enter to search (comma separated values, min length 3 char)';
 
     const searchContainer = document.createElement('div');
     searchContainer.className = 'search-container';
@@ -711,12 +740,16 @@ function searchAndHighlight() {
 
     document.getElementById('searchInput').addEventListener('keydown', function (event) {
         if (event.key === 'Enter') {
-            const highlightedItem = document.querySelector('.highlight');
-            if (highlightedItem) {
-                highlightedItem.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
-            } else {
-                console.log('No highlighted item found');
+            const highlightedItems = document.querySelectorAll('.highlight');
+            if (highlightedItems.length === 0) {
+                console.log('No highlighted items found');
+                return;
             }
+    
+            // Move to the next highlighted item
+            currentHighlightIndex = (currentHighlightIndex + 1) % highlightedItems.length;
+            const highlightedItem = highlightedItems[currentHighlightIndex];
+            highlightedItem.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
         }
     });
 
