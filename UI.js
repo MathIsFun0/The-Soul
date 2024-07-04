@@ -296,7 +296,6 @@ function parseStandardCardName(cardName) {
     const rankPart = parts[0].trim();
     const rank = rankPart.split(' ').pop(); // Get the last word as rank
 
-    console.log({ rank, suit, modifiers, seal });
     return { rank, suit, modifiers, seal };
 }
 
