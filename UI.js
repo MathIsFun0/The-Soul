@@ -278,12 +278,23 @@ function parseStandardCardName(cardName) {
     const sealMatch = cardName.match(sealRegex);
     const seal = sealMatch ? sealMatch[0] : null;
 
-    const cleanedCardName = seal ? cardName.replace(sealRegex, '').trim() : cardName;
+    let cleanedCardName = seal ? cardName.replace(sealRegex, '').trim() : cardName;
+
+    const modifierRegex = /(Foil|Holographic|Polychrome|Bonus|Mult|Wild|Glass|Steel|Stone|Gold|Lucky)/g;
+    const modifiers = cleanedCardName.match(modifierRegex) || [];
+
+    // Remove all modifiers from the cleaned card name
+    cleanedCardName = cleanedCardName.replace(modifierRegex, '').trim();
+
     const parts = cleanedCardName.split(' of ');
+    if (parts.length !== 2) {
+        console.error('Invalid card name format:', cardName);
+        return null;
+    }
+
     const suit = parts[1].trim();
-    const rankAndModifiers = parts[0].split(' ').filter(part => part !== '');
-    const rank = rankAndModifiers.pop();
-    const modifiers = rankAndModifiers;
+    const rankPart = parts[0].trim();
+    const rank = rankPart.split(' ').pop(); // Get the last word as rank
 
     return { rank, suit, modifiers, seal };
 }
@@ -385,52 +396,23 @@ function renderVoucher(canvas, voucherName) {
     };
 }
 
-let currentHighlightIndex = -1;
 function searchAndHighlight() {
     const searchInput = document.getElementById('searchInput');
-    const input = searchInput.value.toLowerCase().trim();
-
-    // Split input by comma
-    const commaSeparatedTerms = input.split(',')
-        .map(term => term.trim())
-        .filter(term => term.length >= 3); // Filter out terms less than 3 letters
+    const searchTerms = searchInput.value.split(',')
+        .map(term => term.trim().toLowerCase())
+        .filter(term => term.length >= 4); // Filter out terms less than 4 letters
 
     const queueItems = document.querySelectorAll('.queueItem, .packItem > div, .voucherContainer, .tagContainer, .bossContainer');
 
     queueItems.forEach(item => {
         const itemText = item.textContent.toLowerCase();
-        let shouldHighlight = false;
-
-        for (let term of commaSeparatedTerms) {
-            // Split term by spaces for the AND logic
-            const spaceSeparatedTerms = term.split(/\s+/)
-                .map(subTerm => subTerm.trim())
-                .filter(subTerm => subTerm.length >= 3);
-
-            // Skip if spaceSeparatedTerms is empty
-            if (spaceSeparatedTerms.length === 0) continue;
-
-            // Create a regex pattern to match terms in any order
-            const regexPattern = spaceSeparatedTerms.map(subTerm => `(?=.*${subTerm})`).join('');
-            const regex = new RegExp(regexPattern, 'i'); // 'i' for case insensitive
-
-            // If any term matches, set shouldHighlight to true
-            if (regex.test(itemText)) {
-                shouldHighlight = true;
-                break;
-            }
-        }
-
+        const shouldHighlight = searchTerms.some(term => itemText.includes(term));
         if (shouldHighlight) {
             item.classList.add('highlight');
         } else {
             item.classList.remove('highlight');
         }
     });
-
-
-    // Reset the highlight index if the search input changes
-    currentHighlightIndex = -1;
 }
 
 (function () {
@@ -724,7 +706,7 @@ function searchAndHighlight() {
 
     const searchLabel = document.createElement('label');
     searchLabel.setAttribute('for', 'searchInput');
-    searchLabel.textContent = 'Press enter to search (comma separated values, min length 3 char)';
+    searchLabel.textContent = 'Press enter to search (comma separated values, min length 4 char)';
 
     const searchContainer = document.createElement('div');
     searchContainer.className = 'search-container';
@@ -740,16 +722,12 @@ function searchAndHighlight() {
 
     document.getElementById('searchInput').addEventListener('keydown', function (event) {
         if (event.key === 'Enter') {
-            const highlightedItems = document.querySelectorAll('.highlight');
-            if (highlightedItems.length === 0) {
-                console.log('No highlighted items found');
-                return;
+            const highlightedItem = document.querySelector('.highlight');
+            if (highlightedItem) {
+                highlightedItem.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
+            } else {
+                console.log('No highlighted item found');
             }
-    
-            // Move to the next highlighted item
-            currentHighlightIndex = (currentHighlightIndex + 1) % highlightedItems.length;
-            const highlightedItem = highlightedItems[currentHighlightIndex];
-            highlightedItem.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
         }
     });
 
@@ -1014,7 +992,7 @@ function searchAndHighlight() {
                                 cardContainer.appendChild(stickerText);
                             });
                         } else {
-                            const { rank, suit, modifiers, seal } = parseStandardCardName(parsedCardName);
+                            const { rank, suit, modifiers, seal } = parseStandardCardName(cardName);
 
                             const canvas = document.createElement('canvas');
                             canvas.width = 71;
