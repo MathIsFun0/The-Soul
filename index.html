@@ -224,7 +224,7 @@
         <input type="text" id="seed" maxlength="8" pattern="[A-Z1-9]{1,8}" required>
         <br>
         <label for="ante">Max Ante:</label>
-        <input type="number" id="ante" min="1" max="39" value="8" required>
+        <input type="number" id="ante" min="1" max="999" value="8" required>
         <br>
         <label for="cardsPerAnte">Cards per Ante:</label>
         <input type="text" id="cardsPerAnte" value = "15,50,50,50,50,50,50,50" required>
@@ -708,7 +708,7 @@
       // Set default seed value
       if (urlAnte) {
         anteInput.value = urlAnte;
-        anteInput.value = Math.min(anteInput.value, 39);
+        anteInput.value = Math.min(anteInput.value, 999);
         anteInput.value = Math.max(anteInput.value, 1);
         cardsPerAnteInput.value = "15,50,50,50,50,50,50,50";
         var input = cardsPerAnteInput.value.split(',').map(Number);
@@ -758,7 +758,7 @@
         seedInput.value = filterSeed(seedInput.value);
       });
       anteInput.addEventListener('input', () => {
-        anteInput.value = Math.min(anteInput.value, 39);
+        anteInput.value = Math.min(anteInput.value, 999);
         anteInput.value = Math.max(anteInput.value, 1);
         var input = cardsPerAnteInput.value.split(',').map(Number);
         var fixedInput = []
