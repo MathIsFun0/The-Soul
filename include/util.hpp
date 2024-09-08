@@ -82,10 +82,15 @@ double pseudohash(std::string s) {
     return num;
 };
 
-double round13(double num) {
-    double fnum = std::floor(num * 1e13) / 1e13;
-    if (num - fnum >= 5e-14) {
-        return (std::floor(num * 1e13) + 1) / 1e13;
+const double inv_prec = std::pow(10.0, 13);
+const double two_inv_prec = std::pow(2.0, 13);
+const double five_inv_prec = std::pow(5.0, 13);
+
+double round13(double x) {
+    double tentative = std::floor(x * inv_prec) / inv_prec;
+    double truncated = std::fmod(x * two_inv_prec, 1.0) * five_inv_prec;
+    if (tentative != x && tentative != std::nextafter(x, 1) && std::fmod(truncated, 1.0) >= 0.5) {
+        return (std::floor(x * inv_prec) + 1) / inv_prec;
     }
-    return fnum;
+    return tentative;
 }
